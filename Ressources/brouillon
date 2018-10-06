@@ -1,23 +1,26 @@
 mac 24:be:05:17:58:90
 
-Global Header
+Global Header														-> 24 octets
 ---------------------------------------
-c3d4 a1b2 
+c3d4 a1b2
 0002
-0004 
-0000 0000 
+0004
 0000 0000
-0000 0004 
-0001 0000 
+0000 0000
+0000 0004									-> 262.144 octets ???
+0001 0000
+																				-> 554 octets +24 -> 578 octets = taille du fichier
+																				-> 562 octets wireshark
 
-Packet Header
+
+Packet Header														-> 16 octets
 ---------------------------------------
-1593 5bb6 
+1593 5bb6
 a380 0005
-003c 0000 								-> 60 octets
-003c 0000 
+003c 0000 								-> 60 octets à lire !
+003c 0000
 
-Packet Data
+Packet Data															-> 60 octets
 ---------------------------------------
 be24 1705 9058 							destination
 
@@ -37,15 +40,15 @@ be24 1705 9058 							destination
 000a 3004 								dst IP address
 
 0000 0000 0000 0000 0000 0000 0000
-0000 0000 
+0000 0000
 
 
 Packet Header
 ---------------------------------------
-1593 5bb6 
-a394 0005 
+1593 5bb6
+a394 0005
 002a 0000
-002a 0000 
+002a 0000
 
 Packet Data
 ---------------------------------------
@@ -82,5 +85,3 @@ fe04
 
 
 cat arp.pcap | dd conv=swab | od -t x2 | cut -d" " -f2-9
-
-
