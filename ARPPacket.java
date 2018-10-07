@@ -7,8 +7,8 @@ public class ARPPacket extends Packet {
   // 0 means the rest of it
   private static String[] fields_name = {"hardware type", "protocol type",
     "hardware address length", "protocol address length", "operation code",
-    "src MAC","src IP","dst MAC","dst IP"};
-  private static int[] fields_size = {2, 2, 1, 1, 2, 6, 4, 6, 4};
+    "src mac","src ip","dst mac","dst ip"};
+  private int[] fields_size = {2, 2, 1, 1, 2, 6, 4, 6, 4};
   private static int header_total = 8;
   private HashMap<String, byte[]> header;
   private byte[] raw_packet;
@@ -16,12 +16,10 @@ public class ARPPacket extends Packet {
   private Packet encapsulated_packet;
 
   public ARPPacket(byte[] packet) {
-    System.out.println("creating ARP packet");
     this.header = new HashMap<String, byte[]>();
     this.raw_packet = packet;
     this.setPacket(packet);
     this.encapsulated_packet = null;
-    System.out.println("created");
   }
 
   public void setPacket(byte[] packet) {
@@ -40,7 +38,7 @@ public class ARPPacket extends Packet {
       } else {
         buffer = new byte[size];
         buffer = Arrays.copyOfRange(packet,offset, offset+size);
-
+        header.put(fields_name[i], buffer);
       }
       offset += size;
     }
@@ -49,12 +47,11 @@ public class ARPPacket extends Packet {
   @Override
   public String toString() {
     String res = "";
-    res += "OpCode \t"+Tools.arpOpCode(header.get("operation code"));
-    res += "MAC src \t"+Tools.hexToMAC(header.get("src mac"));
-    res += "IP src \t"+Tools.hexToIP(header.get("src ip"));
-    res += "MAC dst \t"+Tools.hexToMAC(header.get("dst mac"));
-    res += "IP dst \t"+Tools.hexToIP(header.get("dst ip"));
-    System.out.println(res);
+    res += "OpCode \t\t"+Tools.arpOpCode(header.get("operation code"))+"\n";
+    res += "MAC src \t"+Tools.hexToMAC(header.get("src mac"))+"\n";
+    res += "IP src \t\t"+Tools.hexToIP(header.get("src ip"))+"\n";
+    res += "MAC dst \t"+Tools.hexToMAC(header.get("dst mac"))+"\n";
+    res += "IP dst \t\t"+Tools.hexToIP(header.get("dst ip"))+"\n";
     return res;
   }
 

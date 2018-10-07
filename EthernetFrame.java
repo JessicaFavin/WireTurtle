@@ -22,10 +22,6 @@ public class EthernetFrame extends Packet {
       case "0806":
         //ARP packet -> setData
         encapsulated_packet = new ARPPacket(raw_data);
-        System.out.println(encapsulated_packet==null?"null":"not null");
-        byte[] toot = encapsulated_packet.getHeader().get("src mac");
-        System.out.println(toot==null?"toot null":"toot not null");
-        System.out.println(Tools.hexToString(toot));
         break;
       case "0800":
         //IPv4 packet
@@ -61,13 +57,16 @@ public class EthernetFrame extends Packet {
 
   @Override
   public String toString() {
-    String res = ("Destination \t"+Tools.hexToMAC(header.get("dst"))+"\n");
+
+    String res = "Ethernet Frame\n";
+    res += ("Destination \t"+Tools.hexToMAC(header.get("dst"))+"\n");
     res += ("Source \t\t"+Tools.hexToMAC(header.get("src"))+"\n");
     res += ("Type \t\t"+Tools.findProtocol(Tools.hexToString(header.get("type")))+"\n");
     if(encapsulated_packet!=null){
-      System.out.println("----------------------------------------------------");
-      System.out.println(encapsulated_packet);
+      res += "\n";
+      res += encapsulated_packet.toString();
     }
+    res += "\n\n";
     return res;
   }
 

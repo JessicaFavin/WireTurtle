@@ -102,10 +102,10 @@ public class Tools {
     public static String ipAddress(String st) {
       String res = "", tmp = "";
       for(int i=0; i< st.length(); i+=2){
-        tmp += st.charAt(i)+st.charAt(i+1);
+        tmp += ""+st.charAt(i)+st.charAt(i+1);
         int ip = Integer.parseInt(tmp, 16);
-        res += (new String());
-        res+= (i!=st.length()-1)?".":"";
+        res += String.valueOf(ip);
+        res+= (i!=st.length()-2)?".":"";
         tmp = "";
       }
       return res;

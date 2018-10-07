@@ -43,9 +43,9 @@ public class Main {
 				//System.out.println(Tools.hexToString(byteArray, value));
 				snapshot.add(new EthernetFrame(Arrays.copyOfRange(byteArray, 0, value)));
 			}
-			System.out.println("Done retrieving\n");
 			for(EthernetFrame ef : snapshot) {
 				System.out.println(ef);
+
 			}
 
 		} catch (Exception e) {
