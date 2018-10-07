@@ -67,6 +67,19 @@ public class Tools {
     return res;
   }
 
+  public static String ipProtocol(String hex) {
+    String res;
+    switch(hex) {
+      case "01":
+        res = hex+" (ICMP)";
+        break;
+      default:
+        res = hex;
+        break;
+    }
+    return res;
+  }
+
   public static String arpOpCode(String opcode) {
     String res = "";
     switch(opcode) {
