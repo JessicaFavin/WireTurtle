@@ -7,18 +7,15 @@ public class EthernetFrame extends Packet {
 
   private static String[] fields_name = {"dst", "src", "type", "data", "crc"};
   private int[] fields_size = {6, 6, 2, 0, 4};
-  private static int[] arp_fields_size = {2, 2, };
   private static int header_total = 18;
-  private HashMap<String, byte[]> header;
-  private byte[] raw_packet;
-  private byte[] raw_data;
+  private HashMap<String, String> header;
   private Packet encapsulated_packet;
+  private byte[] raw_data;
 
   public EthernetFrame(byte[] packet) {
-    this.header = new HashMap<String, byte[]>();
-    this.raw_packet = packet;
+    this.header = new HashMap<String, String>();
     this.setPacket(packet);
-    switch(Tools.hexToString(header.get("type"))) {
+    switch(header.get("type")) {
       case "0806":
         //ARP packet -> setData
         encapsulated_packet = new ARPPacket(raw_data);
@@ -49,7 +46,7 @@ public class EthernetFrame extends Packet {
       } else {
         buffer = new byte[size];
         buffer = Arrays.copyOfRange(packet, offset, offset+size);
-        header.put(fields_name[i], buffer);
+        header.put(fields_name[i], Tools.hexToString(buffer));
       }
       offset += size;
     }
@@ -59,20 +56,15 @@ public class EthernetFrame extends Packet {
   public String toString() {
 
     String res = "Ethernet Frame\n";
-    res += ("Destination \t"+Tools.hexToMAC(header.get("dst"))+"\n");
-    res += ("Source \t\t"+Tools.hexToMAC(header.get("src"))+"\n");
-    res += ("Type \t\t"+Tools.findProtocol(Tools.hexToString(header.get("type")))+"\n");
+    res += ("Destination \t"+Tools.macAddress(header.get("dst"))+"\n");
+    res += ("Source \t\t"+Tools.macAddress(header.get("src"))+"\n");
+    res += ("Type \t\t"+Tools.ethProtocol(header.get("type"))+"\n");
     if(encapsulated_packet!=null){
       res += "\n";
       res += encapsulated_packet.toString();
     }
     res += "\n\n";
     return res;
-  }
-
-  @Override
-  public HashMap<String, byte[]> getHeader() {
-    return header;
   }
 
 }

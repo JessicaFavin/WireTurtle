@@ -51,7 +51,7 @@ public class Tools {
     return Integer.parseInt(hexToStringReversed(byteArray, value),16);
   }
 
-  public static String findProtocol(String hex) {
+  public static String ethProtocol(String hex) {
     String res;
     switch(hex) {
       case "0806":
@@ -67,8 +67,7 @@ public class Tools {
     return res;
   }
 
-  public static String arpOpCode(byte[] b) {
-    String opcode = hexToString(b);
+  public static String arpOpCode(String opcode) {
     String res = "";
     switch(opcode) {
       case "0001":
