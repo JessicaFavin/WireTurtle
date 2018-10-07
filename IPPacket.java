@@ -19,34 +19,27 @@ public class IPPacket extends Packet {
     this.setPacket(packet);
     switch(header.get("protocol")) {
       case "01":
-        //this.encapsulated_packet = new ICMPPacket(raw_data);
+        this.encapsulated_packet = new ICMPPacket(raw_data);
         break;
       default:
         break;
     }
   }
 
+  @Override
   public void setPacket(byte[] packet) {
     int offset = 0;
     byte[] buffer;
     int size;
     for(int i=0; i< fields_size.length; i++) {
-
       size = fields_size[i];
-      if(size==0) {
-        //data length including padding
-        size = (packet.length-header_total);
-        fields_size[i] = size;
-        buffer = new byte[size];
-        buffer = Arrays.copyOfRange(packet,offset, offset+size);
-        this.raw_data = buffer;
-      } else {
-        buffer = new byte[size];
-        buffer = Arrays.copyOfRange(packet, offset, offset+size);
-        header.put(fields_name[i], Tools.hexToString(buffer));
-      }
+      buffer = new byte[size];
+      buffer = Arrays.copyOfRange(packet, offset, offset+size);
+      header.put(fields_name[i], Tools.hexToString(buffer));
       offset += size;
     }
+    raw_data = Arrays.copyOfRange(packet, offset, packet.length);
+
   }
 
   @Override
@@ -57,6 +50,7 @@ public class IPPacket extends Packet {
     res += ("Source \t\t"+Tools.ipAddress(header.get("src ip"))+"\n");
     res += ("Destination \t"+Tools.ipAddress(header.get("dst ip"))+"\n");
     res += ("Type \t\t"+Tools.ipProtocol(header.get("protocol"))+"\n");
+    res += ("Time to live \t"+Integer.parseInt(header.get("ttl"),16)+"\n");
 
     if(encapsulated_packet!=null){
       res += "\n";

@@ -80,6 +80,35 @@ public class Tools {
     return res;
   }
 
+  public static String icmpProtocol(String hex_type, String code) {
+    int type = Integer.parseInt(hex_type, 16);
+    String res;
+    switch(type) {
+      case 0:
+        res = type+" Echo reply (ping)";
+        break;
+      case 3:
+        res = type+" Destination unreacheable";
+        break;
+      case 5:
+        res = type+" Redirect message";
+        break;
+      case 8:
+        res = type+" Echo request (ping)";
+        break;
+      case 11:
+        res = type+" Time exceeded";
+        break;
+      case 30:
+        res = type+" traceroute ";
+        break;
+      default:
+        res = String.valueOf(type);
+        break;
+    }
+    return res;
+  }
+
   public static String arpOpCode(String opcode) {
     String res = "";
     switch(opcode) {
@@ -125,5 +154,21 @@ public class Tools {
 
     public static String hexToIP(byte[] byteArray) {
       return ipAddress(hexToString(byteArray));
+    }
+
+    /**
+     * code based on https://stackoverflow.com/questions/4785654/convert-a-string-of-hex-into-ascii-in-java#4785776
+    **/
+    public static String hexToAscii(String hex) {
+      StringBuilder output = new StringBuilder();
+      for (int i = 0; i < hex.length(); i+=2) {
+          String str = hex.substring(i, i+2);
+          int ascii = Integer.parseInt(str, 16);
+          //readable ascii only
+          if(ascii>=32&&ascii<=126){
+            output.append((char) ascii);
+          }
+      }
+      return output.toString();
     }
 }

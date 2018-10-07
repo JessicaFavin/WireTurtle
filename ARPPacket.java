@@ -20,6 +20,7 @@ public class ARPPacket extends Packet {
     this.raw_data = null;
   }
 
+  @Override
   public void setPacket(byte[] packet) {
     int offset = 0;
     byte[] buffer;

@@ -5,9 +5,9 @@ import java.io.*;
 public class EthernetFrame extends Packet {
 
 
-  private static String[] fields_name = {"dst", "src", "type", "data", "crc"};
-  private int[] fields_size = {6, 6, 2, 0, 4};
-  private static int header_total = 18;
+  private static String[] fields_name = {"dst", "src", "type", "data"};
+  private int[] fields_size = {6, 6, 2, 0};
+  private static int header_total = 14;
   private HashMap<String, String> header;
   private Packet encapsulated_packet;
   private byte[] raw_data;
@@ -30,19 +30,20 @@ public class EthernetFrame extends Packet {
     //ARP doesn't encapsulate other protocols
   }
 
+  @Override
   public void setPacket(byte[] packet) {
     int offset = 0;
     byte[] buffer;
     int size;
+    //System.out.println(Tools.hexToString(packet));
     for(int i=0; i< fields_size.length; i++) {
-
       size = fields_size[i];
       if(size==0) {
         //data length including padding
         size = (packet.length-header_total);
         fields_size[i] = size;
         buffer = new byte[size];
-        buffer = Arrays.copyOfRange(packet,offset, offset+size);
+        buffer = Arrays.copyOfRange(packet, offset, offset+size);
         this.raw_data = buffer;
       } else {
         buffer = new byte[size];

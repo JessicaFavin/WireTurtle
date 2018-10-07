@@ -9,4 +9,5 @@ public abstract class Packet {
   private int[] fields_size;
   private Packet encapsulated_packet;
   private byte[] raw_data;
+  abstract void setPacket(byte[] packet);
 }
