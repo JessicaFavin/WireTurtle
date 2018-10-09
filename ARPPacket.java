@@ -6,8 +6,8 @@ public class ARPPacket extends Packet {
 
   private static String[] fields_name = {"hardware type", "protocol type",
     "hardware address length", "protocol address length", "operation code",
-    "src mac","src ip","dst mac","dst ip"};
-  private int[] fields_size = {2, 2, 1, 1, 2, 6, 4, 6, 4};
+    "src mac","src ip","dst mac","dst ip","crc"};
+  private int[] fields_size = {2, 2, 1, 1, 2, 6, 4, 6, 4, 4};
   private static int header_total = 8;
   private HashMap<String, String> header;
   private Packet encapsulated_packet;
