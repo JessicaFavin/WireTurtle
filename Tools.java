@@ -67,10 +67,14 @@ public class Tools {
   }
 
   public static String ipProtocol(String hex) {
-    String res =  hex;
-    switch(hex) {
-      case "01":
+    int protocol = Integer.parseInt(hex, 16);
+    String res =  String.valueOf(protocol);
+    switch(protocol) {
+      case 1:
         res += " (ICMP)";
+        break;
+      case 17:
+        res += " (UDP)";
         break;
       default:
         break;
@@ -114,21 +118,6 @@ public class Tools {
         break;
       case "0002":
         res += " (reply)";
-        break;
-      default:
-        break;
-    }
-    return res;
-  }
-
-  public static String sllProtocol(String hex) {
-    String res = hex;
-    switch(hex) {
-      case "0800":
-        res += " (IPv4)";
-        break;
-      case "86dd":
-        res += " (IPv6)";
         break;
       default:
         break;
@@ -188,6 +177,20 @@ public class Tools {
       return ipAddress(hexToString(byteArray));
     }
 
+    public static String hexToIPv6(String st) {
+        String res = "";
+        if(st.length() != 32) {
+          return st;
+        }
+        for(int i=0; i< st.length(); i++){
+          res += st.charAt(i);
+          if(i%4==3){
+            res+= (i!=st.length()-1)?":":"";
+          }
+        }
+        return res;
+    }
+
     /**
      * code based on https://stackoverflow.com/questions/4785654/convert-a-string-of-hex-into-ascii-in-java#4785776
     **/
@@ -201,6 +204,8 @@ public class Tools {
             output.append((char) ascii);
           } else if (ascii == 0) {
             break;
+          } else {
+            output.append('.');
           }
       }
       return output.toString();
@@ -236,6 +241,9 @@ public class Tools {
         case "001c":
           res += "AAAA (IPv6 address)";
           break;
+        case "001d":
+          res += "LOC (Location Information)";
+        break;
         default:
           break;
       }
@@ -284,16 +292,6 @@ public class Tools {
         default:
           break;
       }
-      return res;
-    }
-
-    public static String dnsResolution(String hex) {
-      String url = hex.substring(0, hex.length()-8);
-      String type = hex.substring(hex.length()-8, hex.length()-4);
-      String dnsclass = hex.substring(hex.length()-4, hex.length());
-      String res = hexToAscii(url);
-      res += "\n\t\t"+Tools.dnsType(type);
-      res += "\n\t\t"+Tools.dnsClass(dnsclass);
       return res;
     }
 

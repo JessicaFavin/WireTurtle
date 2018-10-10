@@ -59,7 +59,6 @@ public class IPPacket extends Packet {
       res += "\n";
       res += encapsulated_packet.toString();
     }
-    res += "\n\n";
     return res;
   }
 

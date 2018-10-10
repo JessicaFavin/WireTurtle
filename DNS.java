@@ -20,12 +20,16 @@ public class DNS extends Packet {
   private final int[] flags_shift = {15, 11, 10, 9, 8, 7, 6, 5, 4, 0};
   private int queries_nb;
   private int answers_nb;
+  private ArrayList<DNSquery> queries;
+  private ArrayList<DNSanswer> answers;
 
   public DNS(byte[] packet) {
     this.raw_data = null;
     this.encapsulated_packet = null;
     this.header = new HashMap<String, String>();
     this.flags = new HashMap<String, Integer>();
+    this.queries = new ArrayList<DNSquery>();
+    this.answers = new ArrayList<DNSanswer>();
     this.setPacket(packet);
     this.setFlags();
     this.setData();
@@ -58,18 +62,58 @@ public class DNS extends Packet {
     queries_nb =  Integer.parseInt(header.get("questions"),16);
     answers_nb =  Integer.parseInt(header.get("answer RRs"),16);
     //queries
-    for(int i=0; i<queries_nb; i++) {
-      //read bytes until 00 -> name + name length for answers maybe
+    String data_hex = header.get("data");
+    int offset = 0;
+    String next;
+    String str = "";
 
+    for(int i=0; i<queries_nb; i++) {
+      //System.out.println("Query n°"+i);
+      //read bytes until 00 -> name + name length for answers maybe
+      //System.out.print("\t");
+      while(!(next = data_hex.substring(offset, offset+2)).equals("00")){
+        str += next;
+        offset += 2;
+        //System.out.print(next);
+      }
+      offset += 2;
+      //System.out.println("");
       // read 2 bytes for type then 2 bytes for class
+      String type = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\tType "+type);
+      String dnsClass = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\tClass "+dnsClass);
+      queries.add(new DNSquery(str,type,dnsClass));
     }
     //answers
     for(int i=0; i<answers_nb; i++) {
+      //System.out.println("Answer n°"+i);
       //read bytes until 00 -> name or name length if set
-
-      // read 2 bytes for type then 2 bytes for class, 4 byts for ttl
+      str = "";
+      String beginning = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\t"+beginning);
+      // read 2 bytes for type then 2 bytes for class
+      String type = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\tType "+type);
+      String dnsClass = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\tClass "+dnsClass);
+      // 4 bytes for ttl
+      String ttl = data_hex.substring(offset, offset+8);
+      offset += 8;
       // 2 bytes for data length + data length bytes for address
+      int data_length = Integer.parseInt(data_hex.substring(offset, offset+4) ,16) * 2;
+      offset += 4;
+      //System.out.println("\tdata length "+data_length);
       // 16 bytes for IPv6 4 bytes for IPv4
+      String dnsData = data_hex.substring(offset, offset+data_length);
+      offset += data_length;
+      //System.out.println("\tdata "+dnsData);
+      answers.add(new DNSanswer(type,dnsClass,ttl, dnsData));
     }
   }
 
@@ -80,22 +124,31 @@ public class DNS extends Packet {
       flags.put(flags_name[i], value);
     }
   }
-  /**
-  *  Reply code values
-  *  0 – Pas d’erreur / No error
-  *  1 – Erreur de format dans la requête
-  *  2 – Problème sur serveur
-  *  3 – Le nom n’existe pas / No such name
-  *  4 – Non implémenté
-  *  5 – Refus
-  *  6-15 – Réservés
-  *
-  **/
+
   @Override
   public String toString() {
     String res = "Domain Name System\n";
-    res += "Reply code: \t"+Tools.dnsReplyCode(flags.get("reply code"))+"\n";
-    res += "Looking for :\t"+Tools.dnsResolution(header.get("data"))+"\n";
+    res += "Transaction ID : \t0x"+header.get("id")+"\n";
+    res += "Reply code : \t"+Tools.dnsReplyCode(flags.get("reply code"))+"\n";
+    //res += "Looking for :\t"+Tools.dnsResolution(header.get("data"))+"\n";
+    res+="\n";
+    if(queries_nb!=0){
+      res += "Query\n";
+      for(DNSquery q : queries) {
+        res += q.toString();
+      }
+      res+="\n";
+    }
+
+    if(answers_nb!=0){
+      res += "Answer(s)\n";
+      for(DNSanswer a : answers) {
+        res += a.toString();
+      }
+      res+="\n";
+    }
+
+
     return res;
   }
 

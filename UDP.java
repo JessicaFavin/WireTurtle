@@ -73,9 +73,8 @@ public class UDP extends Packet {
       res += "\n";
       res += encapsulated_packet.toString();
     } else {
-      res += "Data \t\t\t"+Tools.displayRawData(header.get("data"))+"\n";
+      res += "Data \t\t\t"+Tools.displayRawData(header.get("data"));
     }
-    res += "\n\n";
     return res;
   }
 
