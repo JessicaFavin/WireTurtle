@@ -17,9 +17,12 @@ public class IPPacket extends Packet {
   public IPPacket(byte[] packet) {
     this.header = new HashMap<String, String>();
     this.setPacket(packet);
-    switch(header.get("protocol")) {
-      case "01":
+    switch(Integer.parseInt(header.get("protocol"), 16)) {
+      case 1:
         this.encapsulated_packet = new ICMPPacket(raw_data);
+        break;
+      case 17:
+        this.encapsulated_packet = new UDP(raw_data);
         break;
       default:
         break;
