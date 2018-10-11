@@ -21,6 +21,9 @@ public class IPPacket extends Packet {
       case 1:
         this.encapsulated_packet = new ICMPPacket(raw_data);
         break;
+      case 6:
+        this.encapsulated_packet = new TCP(raw_data);
+        break;
       case 17:
         this.encapsulated_packet = new UDP(raw_data);
         break;
