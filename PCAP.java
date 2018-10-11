@@ -1,10 +1,10 @@
 import java.nio.file.*;
 import java.util.*;
 import java.io.*;
-//import Tools.*;
 
-public class Main {
-	private static int[] global_header_size = {4, 2, 2, 4, 4, 4, 4};
+public class PCAP {
+
+  private static int[] global_header_size = {4, 2, 2, 4, 4, 4, 4};
 	private static String[] global_header_tag = {"magic number", "version major",
 		"version minor", "timezone", "timestamp accuracy", "snaplen", "network"};
 	private static HashMap<String, String> global_header;
@@ -12,8 +12,8 @@ public class Main {
 	private static int[] packet_header_tag = {4, 4, 4, 4};
 	private static ArrayList<EthernetFrame> snapshot;
 
-	public static void main(String[] args) {
-		File file = new File(args[0]);
+  public PCAP(String filename) {
+    File file = new File(filename);
 		int bytes_to_read = (int) file.length();
 		byte[] fileArray;
 		snapshot = new ArrayList<EthernetFrame>();
@@ -44,14 +44,18 @@ public class Main {
 				bytes_to_read -= value;
 				snapshot.add(new EthernetFrame(Arrays.copyOfRange(byteArray, 0, value)));
 			}
-			for(EthernetFrame ef : snapshot) {
-				System.out.println(ef);
-
-			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("");
-	}
+  }
+
+  @Override
+  public String toString() {
+    String res = "";
+    for(EthernetFrame ef : snapshot) {
+      res += ef.toString();
+    }
+    return res;
+  }
+
 }
