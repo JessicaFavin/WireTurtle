@@ -2,7 +2,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class IP extends Packet {
+public class IP extends Layer3 {
 
 
   private static String[] fields_name = {"version header length", "DSCP ECN",

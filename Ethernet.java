@@ -2,14 +2,14 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class Ethernet extends Packet {
+public class Ethernet extends Layer2 {
 
 
   private static String[] fields_name = {"dst", "src", "type", "data"};
   private int[] fields_size = {6, 6, 2, 0};
   private static int header_total = 14;
   private HashMap<String, String> header;
-  private Packet encapsulated_packet;
+  private Layer3 encapsulated_packet;
   private byte[] raw_data;
 
   public Ethernet(byte[] packet) {

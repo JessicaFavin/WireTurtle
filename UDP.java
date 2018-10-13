@@ -2,14 +2,14 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class UDP extends Packet {
+public class UDP extends Layer4 {
 
 
   private static String[] fields_name = {"src port", "dst port", "length", "checksum", "data"};
   private int[] fields_size = {2, 2, 2, 2, 0};
   private static int header_total = 8;
   private HashMap<String, String> header;
-  private Packet encapsulated_packet;
+  private Layer7 encapsulated_packet;
   private byte[] raw_data;
   private int source_port;
   private int destination_port;

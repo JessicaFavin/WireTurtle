@@ -2,7 +2,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class ARP extends Packet {
+public class ARP extends Layer3 {
 
   private static String[] fields_name = {"hardware type", "protocol type",
     "hardware address length", "protocol address length", "operation code",
@@ -10,13 +10,11 @@ public class ARP extends Packet {
   private int[] fields_size = {2, 2, 1, 1, 2, 6, 4, 6, 4, 4};
   private static int header_total = 8;
   private HashMap<String, String> header;
-  private Packet encapsulated_packet;
   private byte[] raw_data;
 
   public ARP(byte[] packet) {
     this.header = new HashMap<String, String>();
     this.setPacket(packet);
-    this.encapsulated_packet = null;
     this.raw_data = null;
   }
 

@@ -2,14 +2,13 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class DNS extends Packet {
+public class DNS extends Layer7 {
 
   private static final String[] fields_name = {"id", "flags", "questions", "answer RRs",
   "authority RRs", "addiditonal RRs", "data"};
   private int[] fields_size = {2, 2, 2, 2, 2, 2, 0};
   private static int header_total = 12;
   private HashMap<String, String> header;
-  private Packet encapsulated_packet;
   private byte[] raw_data;
   private HashMap<String, Integer> flags;
   private final String[] flags_name = {"response", "opcode", "authoritative",
@@ -25,7 +24,6 @@ public class DNS extends Packet {
 
   public DNS(byte[] packet) {
     this.raw_data = null;
-    this.encapsulated_packet = null;
     this.header = new HashMap<String, String>();
     this.flags = new HashMap<String, Integer>();
     this.queries = new ArrayList<DNSquery>();

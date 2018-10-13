@@ -2,7 +2,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class TCP extends Packet {
+public class TCP extends Layer4 {
 
 
   private static String[] fields_name = {"src port", "dst port", "sequence number",
@@ -10,7 +10,7 @@ public class TCP extends Packet {
   private int[] fields_size = {2, 2, 4, 4, 2, 2, 2, 2, 0, -1};
   private static int header_total = 20;
   private HashMap<String, String> header;
-  private Packet encapsulated_packet;
+  private Layer7 encapsulated_packet;
   private byte[] raw_data;
   private int source_port;
   private int destination_port;

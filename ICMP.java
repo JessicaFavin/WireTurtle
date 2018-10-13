@@ -2,20 +2,18 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class ICMP extends Packet {
+public class ICMP extends Layer3 {
 
   private static String[] fields_name = {"type", "code", "checksum", "id", "seq",
   "timestamp", "data"};
   private int[] fields_size = {1,1,2,2,2,8,0};
   private static int header_total = 16;
   private HashMap<String, String> header;
-  private Packet encapsulated_packet;
   private byte[] raw_data;
 
   public ICMP(byte[] packet) {
     this.header = new HashMap<String, String>();
     this.setPacket(packet);
-    this.encapsulated_packet = null;
     this.raw_data = null;
   }
 
