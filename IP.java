@@ -65,4 +65,50 @@ public class IP extends Layer3 {
     return res;
   }
 
+  @Override
+  public boolean isARP(){
+    return false;
+  }
+
+  @Override
+  public boolean isICMP(){
+    return this.encapsulated_packet.isICMP();
+  }
+
+  @Override
+  public boolean isIP(){
+    return true;
+  }
+
+  @Override
+  public boolean isUDP(){
+    return this.encapsulated_packet.isUDP();
+  }
+
+  @Override
+  public boolean isTCP(){
+    return this.encapsulated_packet.isTCP();
+  }
+
+  @Override
+  public boolean isDNS(){
+    return this.encapsulated_packet.isDNS();
+  }
+
+  @Override
+  public boolean isDHCP(){
+    return this.encapsulated_packet.isDHCP();
+  }
+
+  @Override
+  public boolean isHTTP(){
+    return this.encapsulated_packet.isHTTP();
+  }
+  
+  @Override
+  public boolean isFTP(){
+    return this.encapsulated_packet.isFTP();
+  }
+
+
 }

@@ -69,4 +69,42 @@ public class Ethernet extends Layer2 {
     return res;
   }
 
+  @Override
+  public boolean isARP(){
+    return this.encapsulated_packet.isARP();
+  }
+  @Override
+  public boolean isICMP(){
+    return this.encapsulated_packet.isICMP();
+  }
+  @Override
+  public boolean isIP(){
+    return this.encapsulated_packet.isIP();
+  }
+  @Override
+  public boolean isUDP(){
+    return this.encapsulated_packet.isUDP();
+  }
+  @Override
+  public boolean isTCP(){
+    return this.encapsulated_packet.isTCP();
+  }
+  @Override
+  public boolean isDNS(){
+    return this.encapsulated_packet.isDNS();
+  }
+  @Override
+  public boolean isDHCP(){
+    return this.encapsulated_packet.isDHCP();
+  }
+  @Override
+  public boolean isHTTP(){
+    return this.encapsulated_packet.isHTTP();
+  }
+  @Override
+  public boolean isFTP(){
+    return this.encapsulated_packet.isFTP();
+  }
+
+
 }
