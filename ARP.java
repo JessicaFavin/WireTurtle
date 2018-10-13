@@ -2,7 +2,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class ARPPacket extends Packet {
+public class ARP extends Packet {
 
   private static String[] fields_name = {"hardware type", "protocol type",
     "hardware address length", "protocol address length", "operation code",
@@ -13,7 +13,7 @@ public class ARPPacket extends Packet {
   private Packet encapsulated_packet;
   private byte[] raw_data;
 
-  public ARPPacket(byte[] packet) {
+  public ARP(byte[] packet) {
     this.header = new HashMap<String, String>();
     this.setPacket(packet);
     this.encapsulated_packet = null;

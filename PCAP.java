@@ -10,13 +10,13 @@ public class PCAP {
 	private static HashMap<String, String> global_header;
 	private static int[] packet_header_size = {4, 4, 4, 4};
 	private static int[] packet_header_tag = {4, 4, 4, 4};
-	private static ArrayList<EthernetFrame> snapshot;
+	private static ArrayList<Ethernet> snapshot;
 
   public PCAP(String filename) {
     File file = new File(filename);
 		int bytes_to_read = (int) file.length();
 		byte[] fileArray;
-		snapshot = new ArrayList<EthernetFrame>();
+		snapshot = new ArrayList<Ethernet>();
 		try{
 			byte[] byteArray = new byte[2048];
 			int value = 0;
@@ -39,10 +39,10 @@ public class PCAP {
 						packet_size = Tools.hexToIntReversed(byteArray, value);
 					}
 				}
-				//EthernetFrame
+				//Ethernet
 				value = fis.read(byteArray, 0, packet_size);
 				bytes_to_read -= value;
-				snapshot.add(new EthernetFrame(Arrays.copyOfRange(byteArray, 0, value)));
+				snapshot.add(new Ethernet(Arrays.copyOfRange(byteArray, 0, value)));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,7 +52,7 @@ public class PCAP {
   @Override
   public String toString() {
     String res = "";
-    for(EthernetFrame ef : snapshot) {
+    for(Ethernet ef : snapshot) {
       res += ef.toString();
     }
     return res;

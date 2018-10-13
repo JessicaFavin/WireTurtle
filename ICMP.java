@@ -2,7 +2,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class ICMPPacket extends Packet {
+public class ICMP extends Packet {
 
   private static String[] fields_name = {"type", "code", "checksum", "id", "seq",
   "timestamp", "data"};
@@ -12,7 +12,7 @@ public class ICMPPacket extends Packet {
   private Packet encapsulated_packet;
   private byte[] raw_data;
 
-  public ICMPPacket(byte[] packet) {
+  public ICMP(byte[] packet) {
     this.header = new HashMap<String, String>();
     this.setPacket(packet);
     this.encapsulated_packet = null;

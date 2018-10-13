@@ -2,7 +2,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class IPPacket extends Packet {
+public class IP extends Packet {
 
 
   private static String[] fields_name = {"version header length", "DSCP ECN",
@@ -14,12 +14,12 @@ public class IPPacket extends Packet {
   private Packet encapsulated_packet;
   private byte[] raw_data;
 
-  public IPPacket(byte[] packet) {
+  public IP(byte[] packet) {
     this.header = new HashMap<String, String>();
     this.setPacket(packet);
     switch(Integer.parseInt(header.get("protocol"), 16)) {
       case 1:
-        this.encapsulated_packet = new ICMPPacket(raw_data);
+        this.encapsulated_packet = new ICMP(raw_data);
         break;
       case 6:
         this.encapsulated_packet = new TCP(raw_data);

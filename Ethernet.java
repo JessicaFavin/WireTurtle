@@ -2,7 +2,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class EthernetFrame extends Packet {
+public class Ethernet extends Packet {
 
 
   private static String[] fields_name = {"dst", "src", "type", "data"};
@@ -12,17 +12,17 @@ public class EthernetFrame extends Packet {
   private Packet encapsulated_packet;
   private byte[] raw_data;
 
-  public EthernetFrame(byte[] packet) {
+  public Ethernet(byte[] packet) {
     this.header = new HashMap<String, String>();
     this.setPacket(packet);
     switch(header.get("type")) {
       case "0806":
         //ARP packet -> setData
-        this.encapsulated_packet = new ARPPacket(raw_data);
+        this.encapsulated_packet = new ARP(raw_data);
         break;
       case "0800":
         //IPv4 packet
-        this.encapsulated_packet = new IPPacket(raw_data);
+        this.encapsulated_packet = new IP(raw_data);
         break;
       default:
         break;
