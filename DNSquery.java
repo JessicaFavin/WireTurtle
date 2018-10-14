@@ -11,9 +11,9 @@ public class DNSquery {
 
   @Override
   public String toString() {
-    String res = Tools.hexToAscii(this.name)+"\n";
+    String res = "Domain : \t"+Tools.hexToAscii(this.name)+"\n";
     res += "Type : \t\t"+Tools.dnsType(this.type)+"\n";
-    res += "Class : \t\t"+Tools.dnsClass(this.dnsClass);
+    res += "Class : \t"+Tools.dnsClass(this.dnsClass)+"\n";
     return res;
   }
 }

@@ -14,16 +14,16 @@ public class DNSanswer {
   @Override
   public String toString() {
     String res = "Type : \t\t"+Tools.dnsType(this.type)+"\n";
-    res += "Class : \t\t"+Tools.dnsClass(this.dnsClass)+"\n";
+    res += "Class : \t"+Tools.dnsClass(this.dnsClass)+"\n";
     if(type.equals("001c")){
-      res += "Address \t\t"+Tools.hexToIPv6(this.dnsData)+"\n";
+      res += "Address \t"+Tools.hexToIPv6(this.dnsData)+"\n";
     } else if (this.type.equals("0001")){
-      res += "Address \t\t"+Tools.ipAddress(this.dnsData)+"\n";
+      res += "Address \t"+Tools.ipAddress(this.dnsData)+"\n";
     } else if (this.type.equals("000f")){
       String domain = this.dnsData.substring(4, this.dnsData.length()-4);
-      res += "Mail exchange \t\t\t"+Tools.hexToAscii(domain)+"\n";
+      res += "Mail exchange \t\t"+Tools.hexToAscii(domain)+"\n";
     } else {
-      res += "Data \t\t\t"+Tools.hexToAscii(this.dnsData);
+      res += "Data \t\t"+Tools.hexToAscii(this.dnsData)+"\n";
     }
     return res;
   }

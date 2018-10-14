@@ -15,8 +15,8 @@ public class WireTurtle {
 				System.out.println(pcap);
 				break;
 			case 3:
-				pcap = new PCAP(args[2]);
-				pcap.filter(args[1].toUpperCase());
+				pcap = new PCAP(args[2], args[1].toUpperCase());
+				//pcap.filter(args[1].toUpperCase());
 				System.out.println(pcap);
 				break;
 			default:
