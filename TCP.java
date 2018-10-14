@@ -48,14 +48,14 @@ public class TCP extends Layer4 {
     //System.out.println(Tools.hexToString(packet));
     packet: for(int i=0; i< fields_size.length; i++) {
       size = fields_size[i];
-      System.out.println(fields_name[i]);
+      //System.out.println(fields_name[i]);
       if(size==-1) {
         //data length including padding
         if(header_total == packet.length){
           size = 0;
         } else {
-          System.out.println("packet length : "+packet.length);
-          System.out.println("header total : "+this.header_total);
+          //System.out.println("packet length : "+packet.length);
+          //System.out.println("header total : "+this.header_total);
           size = (packet.length-header_total);
           //fields_size[i] = size;
           buffer = new byte[size];
@@ -65,7 +65,7 @@ public class TCP extends Layer4 {
           header.put(fields_name[i], Tools.hexToString(buffer));
         }
       } else if( size == 0){
-        System.out.println("empty");
+        //System.out.println("empty");
         header.put(fields_name[i], "");
       } else {
         buffer = new byte[size];
@@ -80,9 +80,9 @@ public class TCP extends Layer4 {
   }
 
   public void setLengthFlags(String hex) {
-    System.out.println("length flags : "+hex);
+    //System.out.println("length flags : "+hex);
     int header_length = Integer.parseInt(hex.substring(0,1),16)*4;
-    System.out.println("header length="+header_length);
+    //System.out.println("header length="+header_length);
     if(header_length!=header_total){
       //set  options size
       int option_size = header_length - header_total;
@@ -120,45 +120,57 @@ public class TCP extends Layer4 {
   public boolean isARP(){
     return false;
   }
-  
+
   @Override
   public boolean isICMP(){
     return false;
   }
-  
+
   @Override
   public boolean isIP(){
     return false;
   }
-  
+
   @Override
   public boolean isUDP(){
     return false;
   }
-  
+
   @Override
   public boolean isTCP(){
     return true;
   }
-  
+
   @Override
   public boolean isDNS(){
-    return this.encapsulated_packet.isDNS();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isDNS();
+    }
+    return false;
   }
-  
+
   @Override
   public boolean isDHCP(){
-    return this.encapsulated_packet.isDHCP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isDHCP();
+    }
+    return false;
   }
-  
+
   @Override
   public boolean isHTTP(){
-    return this.encapsulated_packet.isHTTP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isHTTP();
+    }
+    return false;
   }
-  
+
   @Override
   public boolean isFTP(){
-    return this.encapsulated_packet.isFTP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isFTP();
+    }
+    return false;
   }
 
 }

@@ -58,4 +58,77 @@ public class PCAP {
     return res;
   }
 
+  public void filter(String protocol) {
+    ArrayList<Ethernet> res = new ArrayList<Ethernet>();
+    switch(protocol) {
+      case "ARP":
+        for(Ethernet ef : snapshot) {
+          if(ef.isARP()){
+            res.add(ef);
+          }
+        }
+        break;
+      case "ICMP":
+        for(Ethernet ef : snapshot) {
+          if(ef.isICMP()){
+            res.add(ef);
+          }
+        }
+        break;
+      case "IP":
+        for(Ethernet ef : snapshot) {
+          if(ef.isIP()){
+            res.add(ef);
+          }
+        }
+        break;
+
+      case "UDP":
+        for(Ethernet ef : snapshot) {
+          if(ef.isUDP()){
+            res.add(ef);
+          }
+        }
+        break;
+      case "TCP":
+        for(Ethernet ef : snapshot) {
+          if(ef.isTCP()){
+            res.add(ef);
+          }
+        }
+        break;
+      case "DNS":
+        for(Ethernet ef : snapshot) {
+          if(ef.isDNS()){
+            res.add(ef);
+          }
+        }
+        break;
+        case "DHCP":
+        for(Ethernet ef : snapshot) {
+          if(ef.isDHCP()){
+            res.add(ef);
+          }
+        }
+        break;
+      case "HTTP":
+        for(Ethernet ef : snapshot) {
+          if(ef.isHTTP()){
+            res.add(ef);
+          }
+        }
+        break;
+      case "FTP":
+        for(Ethernet ef : snapshot) {
+          if(ef.isFTP()){
+            res.add(ef);
+          }
+        }
+        break;
+      default:
+        res = snapshot;
+    }
+    snapshot = res;
+  }
+
 }

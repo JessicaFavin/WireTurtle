@@ -105,22 +105,34 @@ public class UDP extends Layer4 {
 
   @Override
   public boolean isDNS(){
-    return this.encapsulated_packet.isDNS();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isDNS();
+    }
+    return false;
   }
-
+  
   @Override
   public boolean isDHCP(){
-    return this.encapsulated_packet.isDHCP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isDHCP();
+    }
+    return false;
   }
 
   @Override
   public boolean isHTTP(){
-    return this.encapsulated_packet.isHTTP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isHTTP();
+    }
+    return false;
   }
-  
+
   @Override
   public boolean isFTP(){
-    return this.encapsulated_packet.isFTP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isFTP();
+    }
+    return false;
   }
 
 }

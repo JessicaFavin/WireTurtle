@@ -71,39 +71,72 @@ public class Ethernet extends Layer2 {
 
   @Override
   public boolean isARP(){
-    return this.encapsulated_packet.isARP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isARP();
+    }
+    return false;
   }
   @Override
   public boolean isICMP(){
-    return this.encapsulated_packet.isICMP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isICMP();
+    }
+    return false;
   }
+
   @Override
   public boolean isIP(){
-    return this.encapsulated_packet.isIP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isIP();
+    }
+    return false;
   }
+
   @Override
   public boolean isUDP(){
-    return this.encapsulated_packet.isUDP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isUDP();
+    }
+    return false;
   }
+
   @Override
   public boolean isTCP(){
-    return this.encapsulated_packet.isTCP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isTCP();
+    }
+    return false;
   }
   @Override
   public boolean isDNS(){
-    return this.encapsulated_packet.isDNS();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isDNS();
+    }
+    return false;
   }
+
   @Override
   public boolean isDHCP(){
-    return this.encapsulated_packet.isDHCP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isDHCP();
+    }
+    return false;
   }
+
   @Override
   public boolean isHTTP(){
-    return this.encapsulated_packet.isHTTP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isHTTP();
+    }
+    return false;
   }
+  
   @Override
   public boolean isFTP(){
-    return this.encapsulated_packet.isFTP();
+    if(encapsulated_packet!=null){
+      return this.encapsulated_packet.isFTP();
+    }
+    return false;
   }
 
 
