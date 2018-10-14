@@ -92,61 +92,61 @@ public class PCAP {
       switch(filterProtocol) {
         case "ARP":
             if(ef.isARP()){
-              res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+              res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
         case "ICMP":
             if(ef.isICMP()){
-              res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+              res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
         case "IP":
             if(ef.isIP()){
-              res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+              res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
 
         case "UDP":
             if(ef.isUDP()){
-              res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+              res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
         case "TCP":
             if(ef.isTCP()){
-              res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+              res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
         case "DNS":
             if(ef.isDNS()){
-              res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+              res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
           case "DHCP":
             if(ef.isDHCP()){
-              res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+              res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
         case "HTTP":
             if(ef.isHTTP()){
-              res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+              res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
         case "FTP":
             if(ef.isFTP()){
-              res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+              res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
         default:
-          res += ("--------- Packet #"+snapshot.indexOf(ef)+" ---------\n");
+          res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
           res += color(ef)+ef.toString();
           break;
       }
