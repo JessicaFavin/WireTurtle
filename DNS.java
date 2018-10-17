@@ -19,8 +19,12 @@ public class DNS extends Layer7 {
   private final int[] flags_shift = {15, 11, 10, 9, 8, 7, 6, 5, 4, 0};
   private int queries_nb;
   private int answers_nb;
+  private int auth_nb;
+  private int add_nb;
   private ArrayList<DNSquery> queries;
   private ArrayList<DNSanswer> answers;
+  private ArrayList<DNSadditional> additionals;
+  private ArrayList<DNSauthority> authorities;
 
   public DNS(byte[] packet) {
     this.raw_data = null;
@@ -28,6 +32,8 @@ public class DNS extends Layer7 {
     this.flags = new HashMap<String, Integer>();
     this.queries = new ArrayList<DNSquery>();
     this.answers = new ArrayList<DNSanswer>();
+    this.additionals = new ArrayList<DNSadditional>();
+    this.authorities = new ArrayList<DNSauthority>();
     this.setPacket(packet);
     this.setFlags();
     this.setData();
@@ -59,6 +65,8 @@ public class DNS extends Layer7 {
   public void setData() {
     queries_nb =  Integer.parseInt(header.get("questions"),16);
     answers_nb =  Integer.parseInt(header.get("answer RRs"),16);
+    auth_nb =  Integer.parseInt(header.get("authority RRs"),16);
+    add_nb =  Integer.parseInt(header.get("addiditonal RRs"),16);
     //queries
     String data_hex = header.get("data");
     int offset = 0;
@@ -113,6 +121,61 @@ public class DNS extends Layer7 {
       //System.out.println("\tdata "+dnsData);
       answers.add(new DNSanswer(type,dnsClass,ttl, dnsData));
     }
+
+    for(int i=0; i<auth_nb; i++) {
+      //System.out.println("Answer n°"+i);
+      //read bytes until 00 -> name or name length if set
+      str = "";
+      String beginning = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\t"+beginning);
+      // read 2 bytes for type then 2 bytes for class
+      String type = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\tType "+type);
+      String dnsClass = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\tClass "+dnsClass);
+      // 4 bytes for ttl
+      String ttl = data_hex.substring(offset, offset+8);
+      offset += 8;
+      // 2 bytes for data length + data length bytes for address
+      int data_length = Integer.parseInt(data_hex.substring(offset, offset+4) ,16) * 2;
+      offset += 4;
+      //System.out.println("\tdata length "+data_length);
+      // 16 bytes for IPv6 4 bytes for IPv4
+      String dnsData = data_hex.substring(offset, offset+data_length);
+      offset += data_length;
+      //System.out.println("\tdata "+dnsData);
+      authorities.add(new DNSauthority(type,dnsClass,ttl, dnsData));
+    }
+    for(int i=0; i<add_nb; i++) {
+      //System.out.println("Answer n°"+i);
+      //read bytes until 00 -> name or name length if set
+      str = "";
+      String beginning = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\t"+beginning);
+      // read 2 bytes for type then 2 bytes for class
+      String type = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\tType "+type);
+      String dnsClass = data_hex.substring(offset, offset+4);
+      offset += 4;
+      //System.out.println("\tClass "+dnsClass);
+      // 4 bytes for ttl
+      String ttl = data_hex.substring(offset, offset+8);
+      offset += 8;
+      // 2 bytes for data length + data length bytes for address
+      int data_length = Integer.parseInt(data_hex.substring(offset, offset+4) ,16) * 2;
+      offset += 4;
+      //System.out.println("\tdata length "+data_length);
+      // 16 bytes for IPv6 4 bytes for IPv4
+      String dnsData = data_hex.substring(offset, offset+data_length);
+      offset += data_length;
+      //System.out.println("\tdata "+dnsData);
+      additionals.add(new DNSadditional(type,dnsClass,ttl, dnsData));
+    }
   }
 
   private void setFlags() {
@@ -141,6 +204,20 @@ public class DNS extends Layer7 {
     if(answers_nb!=0){
       res += "Answer(s)\n";
       for(DNSanswer a : answers) {
+        res += a.toString();
+      }
+      res+="\n";
+    }
+    if(auth_nb!=0){
+      res += "Authority(ies)\n";
+      for(DNSauthority a : authorities) {
+        res += a.toString();
+      }
+      res+="\n";
+    }
+    if(add_nb!=0){
+      res += "Additional(s)\n";
+      for(DNSadditional a : additionals) {
         res += a.toString();
       }
       res+="\n";
