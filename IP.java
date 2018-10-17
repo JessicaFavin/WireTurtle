@@ -11,7 +11,7 @@ public class IP extends Layer3 {
   private int[] fields_size = {1,1,2,2,2,1,1,2,4,4};
   private static int header_total = 20;
   private HashMap<String, String> header;
-  private Packet encapsulated_packet;
+  private Layer4 encapsulated_packet;
   private byte[] raw_data;
 
   public IP(byte[] packet) {
