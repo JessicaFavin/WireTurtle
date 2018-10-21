@@ -23,6 +23,11 @@ public class UDP extends Layer4 {
       case 53:
         this.encapsulated_packet = new DNS(raw_data);
         break;
+      case 80:
+        if(raw_data!=null){
+          this.encapsulated_packet = new HTTP(raw_data);
+        }
+        break;
       default:
         this.encapsulated_packet = null;
         break;
@@ -31,6 +36,11 @@ public class UDP extends Layer4 {
       switch(destination_port) {
         case 53:
           this.encapsulated_packet = new DNS(raw_data);
+          break;
+        case 80:
+          if(raw_data!=null){
+            this.encapsulated_packet = new HTTP(raw_data);
+          }
           break;
         default:
           this.encapsulated_packet = null;
@@ -110,7 +120,7 @@ public class UDP extends Layer4 {
     }
     return false;
   }
-  
+
   @Override
   public boolean isDHCP(){
     if(encapsulated_packet!=null){

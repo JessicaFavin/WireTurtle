@@ -17,12 +17,20 @@ public class TCP extends Layer4 {
 
   public TCP(byte[] packet) {
     this.header = new HashMap<String, String>();
+    this.raw_data = null;
     this.setPacket(packet);
     this.source_port = Integer.parseInt(header.get("src port"), 16);
     this.destination_port = Integer.parseInt(header.get("dst port"), 16);
+    this.encapsulated_packet = null;
     switch(source_port) {
       case 53:
         this.encapsulated_packet = new DNS(raw_data);
+        break;
+      case 80:
+        if(raw_data!=null){
+          this.encapsulated_packet = new HTTP(raw_data);
+          //System.out.println("HTTP raw data : "+Tools.hexToString(this.raw_data));
+        }
         break;
       default:
         this.encapsulated_packet = null;
@@ -32,6 +40,12 @@ public class TCP extends Layer4 {
       switch(destination_port) {
         case 53:
           this.encapsulated_packet = new DNS(raw_data);
+          break;
+        case 80:
+          if(raw_data!=null){
+            this.encapsulated_packet = new HTTP(raw_data);
+            //System.out.println("HTTP raw data : "+Tools.hexToString(this.raw_data));
+          }
           break;
         default:
           this.encapsulated_packet = null;
@@ -53,13 +67,18 @@ public class TCP extends Layer4 {
         //data length including padding
         if(header_total == packet.length){
           size = 0;
+          header.put(fields_name[i], "");
         } else {
+          //System.out.println(Integer.parseInt(header.get("src port"), 16));
+          //System.out.println(Integer.parseInt(header.get("dst port"), 16));
+          //System.out.println("------------Set raw data "+fields_name[i]);
           //System.out.println("packet length : "+packet.length);
           //System.out.println("header total : "+this.header_total);
           size = (packet.length-header_total);
           //fields_size[i] = size;
           buffer = new byte[size];
           buffer = Arrays.copyOfRange(packet, offset, offset+size);
+          //System.out.println("buffer : "+Tools.hexToString(buffer));
           //need to differentiate data from options ??
           this.raw_data = buffer;
           header.put(fields_name[i], Tools.hexToString(buffer));

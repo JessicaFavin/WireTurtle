@@ -63,23 +63,23 @@ public class PCAP {
 
   private String color(Ethernet ef) {
     String res = "";
-    if(ef.isARP()){
+    if(ef.isFTP()){
       res += "\u001B[30m";
-    } else if(ef.isICMP()) {
+    } else if(ef.isHTTP()) {
       res += "\u001B[32m";
-    } else if(ef.isIP()) {
+    } else if(ef.isDHCP()) {
       res += "\u001B[33m";
-    } else if(ef.isUDP()) {
+    } else if(ef.isDNS()) {
       res += "\u001B[34m";
     } else if(ef.isTCP()) {
       res += "\u001B[35m";
-    } else if(ef.isDNS()) {
+    } else if(ef.isUDP()) {
       res += "\u001B[36m";
-    } else if(ef.isDHCP()) {
+    } else if(ef.isIP()) {
       res += "\u001B[37m";
-    } else if(ef.isHTTP()) {
+    } else if(ef.isICMP()) {
       res += "\u001B[38m";
-    } else if(ef.isFTP()) {
+    } else if(ef.isARP()) {
       res += "\u001B[39m";
     }
     return res;
