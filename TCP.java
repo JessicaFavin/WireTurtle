@@ -6,10 +6,18 @@ public class TCP extends Layer4 {
 
 
   private static String[] fields_name = {"src port", "dst port", "sequence number",
-  "ack", "length flags", "window size", "checksum", "urgent pointer", "options", "segment data"};
+  "ack", "offset flags", "window size", "checksum", "urgent pointer", "options", "segment data"};
   private int[] fields_size = {2, 2, 4, 4, 2, 2, 2, 2, 0, -1};
   private static int header_total = 20;
   private HashMap<String, String> header;
+  /*
+  private final String[] flags_name = {"response", "opcode", "authoritative",
+  "truncated", "recursion desired", "recursion available", "Z", "answer authenticated",
+  "non-authenticated data", "reply code"};
+  private final int[] flags_mask = {0x8000, 0x7800, 0x0400, 0x0200, 0x0100,
+    0x0080, 0x0040, 0x0020, 0X0010, 0x000f};
+  private final int[] flags_shift = {15, 11, 10, 9, 8, 7, 6, 5, 4, 0};
+  */
   private Layer7 encapsulated_packet;
   private byte[] raw_data;
   private int source_port;
