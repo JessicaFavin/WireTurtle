@@ -10,14 +10,15 @@ public class TCP extends Layer4 {
   private int[] fields_size = {2, 2, 4, 4, 2, 2, 2, 2, 0, -1};
   private static int header_total = 20;
   private HashMap<String, String> header;
-  /*
-  private final String[] flags_name = {"response", "opcode", "authoritative",
-  "truncated", "recursion desired", "recursion available", "Z", "answer authenticated",
-  "non-authenticated data", "reply code"};
-  private final int[] flags_mask = {0x8000, 0x7800, 0x0400, 0x0200, 0x0100,
-    0x0080, 0x0040, 0x0020, 0X0010, 0x000f};
-  private final int[] flags_shift = {15, 11, 10, 9, 8, 7, 6, 5, 4, 0};
-  */
+
+  private HashMap<String, Integer> flags;
+  private final String[] flags_name = {"RSRVD", "NONCE", "CWR",
+  "ECN", "URG", "ACK", "PSH", "RST", "SYN",
+  "FIN"};
+  private final int[] flags_mask = {0xe00, 0x100, 0x080, 0x040, 0x020, 0x010,
+    0x008, 0x004, 0x002, 0X001};
+  private final int[] flags_shift = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+
   private Layer7 encapsulated_packet;
   private byte[] raw_data;
   private int source_port;
@@ -25,6 +26,7 @@ public class TCP extends Layer4 {
 
   public TCP(byte[] packet) {
     this.header = new HashMap<String, String>();
+    this.flags = new HashMap<String, Integer>();
     this.raw_data = null;
     this.setPacket(packet);
     this.source_port = Integer.parseInt(header.get("src port"), 16);
@@ -95,7 +97,6 @@ public class TCP extends Layer4 {
           buffer = new byte[size];
           buffer = Arrays.copyOfRange(packet, offset, offset+size);
           //System.out.println("buffer : "+Tools.hexToString(buffer));
-          //need to differentiate data from options ??
           this.raw_data = buffer;
           header.put(fields_name[i], Tools.hexToString(buffer));
         }
@@ -105,8 +106,9 @@ public class TCP extends Layer4 {
       } else {
         buffer = new byte[size];
         buffer = Arrays.copyOfRange(packet, offset, offset+size);
-        if(fields_name[i].equals("length flags")){
-          this.setLengthFlags(Tools.hexToString(buffer));
+        if(fields_name[i].equals("offset flags")){
+          //will set options size in the array
+          this.setLengthAndFlags(Tools.hexToString(buffer));
         }
         header.put(fields_name[i], Tools.hexToString(buffer));
       }
@@ -114,7 +116,7 @@ public class TCP extends Layer4 {
     }
   }
 
-  public void setLengthFlags(String hex) {
+  public void setLengthAndFlags(String hex) {
     //System.out.println("length flags : "+hex);
     int header_length = Integer.parseInt(hex.substring(0,1),16)*4;
     //System.out.println("header length="+header_length);
@@ -130,18 +132,36 @@ public class TCP extends Layer4 {
       header_total = header_length;
     }
     //configure flags
-    setFlags(hex.substring(1,hex.length()));
+    header.put("flags", hex.substring(1,hex.length()));
+    setFlags();
   }
 
-  public void setFlags(String hex) {
-    return;
+  private void setFlags() {
+    int flags_hex = Integer.parseInt(header.get("flags"), 16);
+    for(int i=0; i<flags_name.length; i++) {
+      int value = (flags_hex & flags_mask[i])>> flags_shift[i];
+      //System.out.println("Adding flag "+flags_name[i]+":"+value);
+      flags.put(flags_name[i], value);
+    }
   }
+
+  public String flagsToString() {
+    String res = "";
+    for(int i=0; i<flags_name.length; i++){
+      if(flags.get(flags_name[i])!=null && flags.get(flags_name[i])!=0){
+        res += flags_name[i]+" ";
+      }
+    }
+    return res+"\n";
+  }
+
   @Override
   public String toString() {
 
     String res = "Transmission Control Protocol (TCP)\n";
     res += ("Source Port \t\t"+Tools.udpPort(source_port)+"\n");
     res += ("Destination Port \t"+Tools.udpPort(destination_port)+"\n");
+    res += "Flags: "+flagsToString();
     if(encapsulated_packet!=null){
       res += "\n";
       res += encapsulated_packet.toString();
