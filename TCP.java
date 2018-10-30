@@ -40,6 +40,10 @@ public class TCP extends Layer4 {
           //System.out.println("HTTP raw data : "+Tools.hexToString(this.raw_data));
         }
         break;
+      case 67:
+      case 68:
+        this.encapsulated_packet = new DHCP(raw_data);
+        break;
       default:
         this.encapsulated_packet = null;
         break;
@@ -54,6 +58,10 @@ public class TCP extends Layer4 {
             this.encapsulated_packet = new HTTP(raw_data);
             //System.out.println("HTTP raw data : "+Tools.hexToString(this.raw_data));
           }
+          break;
+        case 67:
+        case 68:
+          this.encapsulated_packet = new DHCP(raw_data);
           break;
         default:
           this.encapsulated_packet = null;
@@ -132,7 +140,7 @@ public class TCP extends Layer4 {
   public String toString() {
 
     String res = "Transmission Control Protocol (TCP)\n";
-    res += ("Source Port \t\t"+source_port+"\n");
+    res += ("Source Port \t\t"+Tools.udpPort(source_port)+"\n");
     res += ("Destination Port \t"+Tools.udpPort(destination_port)+"\n");
     if(encapsulated_packet!=null){
       res += "\n";

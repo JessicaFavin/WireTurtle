@@ -143,6 +143,27 @@ public class Tools {
     return res;
   }
 
+  public static String dhcpOpcode(int dhcpCode){
+    String res = String.valueOf(dhcpCode);
+    switch(dhcpCode){
+      case 5:
+        res += " (ACK)";
+        break;
+      case 3:
+        res += " (Request)";
+        break;
+      case 2:
+        res += " (Offer)";
+        break;
+      case 1:
+        res += "(Discover)";
+        break;
+      default:
+        break;
+    }
+    return res;
+  }
+
   public static String macAddress(String st) {
     String res = "";
     if(st.length() != 12) {

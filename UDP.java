@@ -28,6 +28,10 @@ public class UDP extends Layer4 {
           this.encapsulated_packet = new HTTP(raw_data);
         }
         break;
+      case 67:
+      case 68:
+        this.encapsulated_packet = new DHCP(raw_data);
+        break;
       default:
         this.encapsulated_packet = null;
         break;
@@ -41,6 +45,10 @@ public class UDP extends Layer4 {
           if(raw_data!=null){
             this.encapsulated_packet = new HTTP(raw_data);
           }
+          break;
+        case 67:
+        case 68:
+          this.encapsulated_packet = new DHCP(raw_data);
           break;
         default:
           this.encapsulated_packet = null;
@@ -77,7 +85,7 @@ public class UDP extends Layer4 {
   public String toString() {
 
     String res = "User Datagram Protocol (UDP)\n";
-    res += ("Source Port \t\t"+source_port+"\n");
+    res += ("Source Port \t\t"+Tools.udpPort(source_port)+"\n");
     res += ("Destination Port \t"+Tools.udpPort(destination_port)+"\n");
     if(encapsulated_packet!=null){
       res += "\n";
