@@ -64,7 +64,7 @@ public class PCAP {
   private String color(Ethernet ef) {
     String res = "";
     if(ef.isFTP()){
-      res += "\u001B[30m";
+      res += "\u001B[92m";
     } else if(ef.isHTTP()) {
       res += "\u001B[32m";
     } else if(ef.isDHCP()) {
@@ -76,11 +76,11 @@ public class PCAP {
     } else if(ef.isUDP()) {
       res += "\u001B[36m";
     } else if(ef.isIP()) {
-      res += "\u001B[37m";
+      res += "\u001B[93m";
     } else if(ef.isICMP()) {
-      res += "\u001B[38m";
+      res += "\u001B[94m";
     } else if(ef.isARP()) {
-      res += "\u001B[39m";
+      res += "\u001B[95m";
     }
     return res;
   }
