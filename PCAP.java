@@ -79,7 +79,7 @@ public class PCAP {
       if(ef.isTCP()){
         id = (ef.getIpSrc()+ef.getPortSrc()+ef.getIpDst()+ef.getPortDst());
         idReversed = (ef.getIpDst()+ef.getPortDst()+ef.getIpSrc()+ef.getPortSrc());
-        System.out.println("ID: "+id+" "+idReversed);
+        //System.out.println("ID: "+id+" "+idReversed);
         if(inHandshake==0){
           if(ef.hasSyn()) {
             //System.out.println("Syn");
@@ -102,7 +102,7 @@ public class PCAP {
             inHandshake++;
             //add couple in conv
             conversations.put(id, new ConversationTCP());
-            System.out.println("Contains : "+conversations.containsKey(id));
+            //System.out.println("Contains : "+conversations.containsKey(id));
             inHandshake = 0;
             continue;
           } else {
