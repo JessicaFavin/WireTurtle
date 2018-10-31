@@ -47,4 +47,14 @@ public class Layer7 extends Packet {
     return false;
   }
 
+  @Override
+  public boolean hasSyn(){
+    return false;
+  }
+
+  @Override
+  public boolean hasAck(){
+    return false;
+  }
+
 }

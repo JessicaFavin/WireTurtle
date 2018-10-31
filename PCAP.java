@@ -10,12 +10,19 @@ public class PCAP {
 	private static HashMap<String, String> global_header;
 	private static int[] packet_header_size = {4, 4, 4, 4};
 	private static int[] packet_header_tag = {4, 4, 4, 4};
-	private static ArrayList<Ethernet> snapshot;
+	private ArrayList<Ethernet> snapshot;
   private String filterProtocol;
+  private int convNumber;
+  private HashMap<String,ConversationTCP> conversations;
 
   public PCAP(String filename, String filter) {
     this(filename);
     this.filterProtocol = filter;
+  }
+
+  public PCAP(String filename, int convNumber) {
+    this(filename);
+    this.convNumber = convNumber;
   }
 
   public PCAP(String filename) {
@@ -23,7 +30,9 @@ public class PCAP {
 		int bytes_to_read = (int) file.length();
 		byte[] fileArray;
 		snapshot = new ArrayList<Ethernet>();
-    filterProtocol = "";
+    this.conversations = new HashMap<String,ConversationTCP>();
+    this.filterProtocol = "";
+    this.convNumber = -1;
 		try{
 			byte[] byteArray = new byte[8192];
 			int value = 0;
@@ -56,9 +65,61 @@ public class PCAP {
 				snapshot.add(new Ethernet(Arrays.copyOfRange(byteArray, 0, value)));
         packet_count++;
 			}
+      recomposeConversations();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+  }
+
+  private void recomposeConversations() {
+    int inHandshake = 0;// outHandshake = 0;
+    String id = "", idReversed = "";
+
+    loop: for(Ethernet ef : snapshot) {
+      if(ef.isTCP()){
+        id = (ef.getIpSrc()+ef.getPortSrc()+ef.getIpDst()+ef.getPortDst());
+        idReversed = (ef.getIpDst()+ef.getPortDst()+ef.getIpSrc()+ef.getPortSrc());
+        System.out.println("ID: "+id+" "+idReversed);
+        if(inHandshake==0){
+          if(ef.hasSyn()) {
+            //System.out.println("Syn");
+            inHandshake++;
+            continue;
+          } else {
+            inHandshake = 0;
+          }
+        } else if(inHandshake==1){
+          if(ef.hasSyn() && ef.hasAck()) {
+            //System.out.println("Syn Ack");
+            inHandshake++;
+            continue;
+          } else {
+            inHandshake = 0;
+          }
+        } else if(inHandshake==2){
+          if(ef.hasAck()) {
+            //System.out.println("Ack");
+            inHandshake++;
+            //add couple in conv
+            conversations.put(id, new ConversationTCP());
+            System.out.println("Contains : "+conversations.containsKey(id));
+            inHandshake = 0;
+            continue;
+          } else {
+            inHandshake = 0;
+          }
+        }
+        //------------Not a handshake message--------------
+        if(conversations.containsKey(id)){
+          conversations.get(id).addData(ef.getTcpSeq(), ef.getTcpData());
+        } else if(conversations.containsKey(idReversed)){
+          conversations.get(idReversed).addData(ef.getTcpSeq(), ef.getTcpData());
+        }
+      }
+    }
+    for(Map.Entry conv : conversations.entrySet()) {
+      ((ConversationTCP)conv.getValue()).recompose();
+    }
   }
 
   private String color(Ethernet ef) {
@@ -85,8 +146,7 @@ public class PCAP {
     return res;
   }
 
-  @Override
-  public String toString() {
+  public String displayProtocolPackets() {
     String res = "";
     for(Ethernet ef : snapshot) {
       switch(filterProtocol) {
@@ -152,6 +212,31 @@ public class PCAP {
       }
 
       res += "\u001B[0m";
+    }
+    res += conversations.size()+" conversations were found.";
+    return res;
+  }
+
+  public String displayConversation(int which) {
+    int i = 1;
+    String res = "";
+    for (Map.Entry entry : conversations.entrySet()) {
+      if(which==0 || i==which){
+        res += "--------- Conversation #"+i+" ---------\n";
+        res += entry.getValue().toString();
+      }
+      i++;
+    }
+    return res;
+  }
+
+  @Override
+  public String toString() {
+    String res = "";
+    if(convNumber>=0) {
+      res += displayConversation(this.convNumber);
+    } else {
+      res += displayProtocolPackets();
     }
     return res;
   }

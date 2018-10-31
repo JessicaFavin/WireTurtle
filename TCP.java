@@ -238,4 +238,44 @@ public class TCP extends Layer4 {
     return false;
   }
 
+  @Override
+  public boolean hasSyn(){
+    if(flags.get("SYN")!=null && flags.get("SYN")!=0){
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean hasAck(){
+    if(flags.get("ACK")!=null && flags.get("ACK")!=0){
+      return true;
+    }
+    return false;
+  }
+
+  public String getPortSrc() {
+    return Integer.toString(source_port);
+  }
+
+  public String getPortDst() {
+    return Integer.toString(destination_port);
+  }
+
+  public String getTcpSeq() {
+    String res = this.header.get("sequence number");
+    if(res!=null) {
+      return res;
+    }
+    return "";
+  }
+
+  public String getTcpData() {
+    String res = this.header.get("segment data");
+    if(res!=null) {
+      return res;
+    }
+    return "";
+  }
+
 }

@@ -47,4 +47,20 @@ public class Layer3 extends Packet {
     return false;
   }
 
+  @Override
+  public boolean hasSyn(){
+    if(this.isTCP()) {
+      return this.encapsulated_packet.hasSyn();
+    }
+    return false;
+  }
+
+  @Override
+  public boolean hasAck(){
+    if(this.isTCP()) {
+      return this.encapsulated_packet.hasAck();
+    }
+    return false;
+  }
+
 }

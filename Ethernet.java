@@ -130,13 +130,71 @@ public class Ethernet extends Layer2 {
     }
     return false;
   }
-  
+
   @Override
   public boolean isFTP(){
     if(encapsulated_packet!=null){
       return this.encapsulated_packet.isFTP();
     }
     return false;
+  }
+
+  @Override
+  public boolean hasSyn(){
+    if(this.isTCP()) {
+      return this.encapsulated_packet.hasSyn();
+    }
+    return false;
+  }
+
+  @Override
+  public boolean hasAck(){
+    if(this.isTCP()) {
+      return this.encapsulated_packet.hasAck();
+    }
+    return false;
+  }
+
+  public String getIpSrc() {
+    if(this.isIP()) {
+      return ((IP) this.encapsulated_packet).getIpSrc();
+    }
+    return "";
+  }
+
+  public String getIpDst() {
+    if(this.isIP()) {
+      return ((IP) this.encapsulated_packet).getIpDst();
+    }
+    return "";
+  }
+
+  public String getPortSrc() {
+    if(this.isIP()) {
+      return ((IP) this.encapsulated_packet).getPortSrc();
+    }
+    return "";
+  }
+
+  public String getPortDst() {
+    if(this.isIP()) {
+      return ((IP) this.encapsulated_packet).getPortDst();
+    }
+    return "";
+  }
+
+  public String getTcpSeq() {
+    if(this.isIP()) {
+      return ((IP) this.encapsulated_packet).getTcpSeq();
+    }
+    return "";
+  }
+
+  public String getTcpData() {
+    if(this.isIP()) {
+      return ((IP) this.encapsulated_packet).getTcpData();
+    }
+    return "";
   }
 
 

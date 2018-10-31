@@ -80,10 +80,7 @@ public class IP extends Layer3 {
 
   @Override
   public boolean isIP(){
-    if(encapsulated_packet!=null){
-      return this.encapsulated_packet.isIP();
-    }
-    return false;
+    return true;
   }
 
   @Override
@@ -134,5 +131,64 @@ public class IP extends Layer3 {
     return false;
   }
 
+  @Override
+  public boolean hasSyn(){
+    if(this.isTCP()) {
+      return this.encapsulated_packet.hasSyn();
+    }
+    return false;
+  }
+
+  @Override
+  public boolean hasAck(){
+    if(this.isTCP()) {
+      return this.encapsulated_packet.hasAck();
+    }
+    return false;
+  }
+
+  public String getIpSrc() {
+    String ip = header.get("src ip");
+    if(ip!=null){
+      return ip;
+    }
+    return "";
+  }
+
+  public String getIpDst() {
+    String ip = header.get("dst ip");
+    if(ip!=null){
+      return ip;
+    }
+    return "";
+  }
+
+  public String getPortSrc() {
+    if(this.isTCP()) {
+      return ((TCP) this.encapsulated_packet).getPortSrc();
+    }
+    return "";
+  }
+
+  public String getPortDst() {
+    if(this.isTCP()) {
+      return ((TCP) this.encapsulated_packet).getPortDst();
+    }
+    return "";
+  }
+
+  public String getTcpSeq() {
+    if(this.isTCP()) {
+      return ((TCP) this.encapsulated_packet).getTcpSeq();
+    }
+    return "";
+  }
+
+  public String getTcpData() {
+    if(this.isTCP()) {
+      return ((TCP) this.encapsulated_packet).getTcpData();
+    }
+    return "";
+  }
 
 }

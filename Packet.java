@@ -7,7 +7,7 @@ public abstract class Packet {
   private static int header_total;
   private static String[] fields_name;
   private int[] fields_size;
-  private Packet encapsulated_packet;
+  protected Packet encapsulated_packet;
   private byte[] raw_data;
   public abstract void setPacket(byte[] packet);
   public abstract boolean isARP();
@@ -19,4 +19,6 @@ public abstract class Packet {
   public abstract boolean isDHCP();
   public abstract boolean isHTTP();
   public abstract boolean isFTP();
+  public abstract boolean hasSyn();
+  public abstract boolean hasAck();
 }
