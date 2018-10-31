@@ -188,7 +188,7 @@ public class DNS extends Layer7 {
 
   @Override
   public String toString() {
-    String res = "Domain Name System\n";
+    String res = "Domain Name System (DNS)\n";
     res += "Transaction ID : \t0x"+header.get("id")+"\n";
     res += "Reply code : \t\t"+Tools.dnsReplyCode(flags.get("reply code"))+"\n";
     //res += "Looking for :\t"+Tools.dnsResolution(header.get("data"))+"\n";
