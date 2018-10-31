@@ -33,6 +33,11 @@ public class TCP extends Layer4 {
     this.destination_port = Integer.parseInt(header.get("dst port"), 16);
     this.encapsulated_packet = null;
     switch(source_port) {
+      case 21:
+        if(raw_data!=null){
+          this.encapsulated_packet = new FTP(raw_data);
+        }
+        break;
       case 53:
         this.encapsulated_packet = new DNS(raw_data);
         break;
@@ -52,6 +57,11 @@ public class TCP extends Layer4 {
     }
     if(this.encapsulated_packet == null) {
       switch(destination_port) {
+        case 21:
+          if(raw_data!=null){
+            this.encapsulated_packet = new FTP(raw_data);
+          }
+          break;
         case 53:
           this.encapsulated_packet = new DNS(raw_data);
           break;
