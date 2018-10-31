@@ -79,7 +79,8 @@ public class PCAP {
       if(ef.isTCP()){
         id = (ef.getIpSrc()+ef.getPortSrc()+ef.getIpDst()+ef.getPortDst());
         idReversed = (ef.getIpDst()+ef.getPortDst()+ef.getIpSrc()+ef.getPortSrc());
-        //System.out.println("ID: "+id+" "+idReversed);
+        System.out.println("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
+        System.out.println("ID: "+id+" "+idReversed);
         if(inHandshake==0){
           if(ef.hasSyn()) {
             //System.out.println("Syn");
@@ -112,8 +113,10 @@ public class PCAP {
         //------------Not a handshake message--------------
         if(conversations.containsKey(id)){
           conversations.get(id).addData(ef.getTcpSeq(), ef.getTcpData());
+          System.out.println("Added");
         } else if(conversations.containsKey(idReversed)){
           conversations.get(idReversed).addData(ef.getTcpSeq(), ef.getTcpData());
+          System.out.println("Added");
         }
       }
     }

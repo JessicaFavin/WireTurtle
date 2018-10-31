@@ -17,7 +17,10 @@ public class ConversationTCP {
 
   public void recompose() {
     String res = "";
+    System.out.println("Length : "+dataList.size());
+    int i = 1;
     for(Map.Entry entry : dataList.entrySet()) {
+      System.out.println("i : "+(i++)+" res : "+Tools.hexToAscii(entry.getValue().toString()));
       res += Tools.hexToAscii(entry.getValue().toString());
     }
     this.data = res;
