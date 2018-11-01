@@ -2,7 +2,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.io.*;
 
-public class Layer3 extends Packet {
+public abstract class Layer3 extends Packet {
   private byte[] raw_data;
 
   @Override
