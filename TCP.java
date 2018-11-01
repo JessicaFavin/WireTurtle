@@ -32,51 +32,60 @@ public class TCP extends Layer4 {
     this.source_port = Integer.parseInt(header.get("src port"), 16);
     this.destination_port = Integer.parseInt(header.get("dst port"), 16);
     this.encapsulated_packet = null;
-    switch(source_port) {
-      case 21:
-        if(raw_data!=null){
-          this.encapsulated_packet = new FTP(raw_data);
-        }
-        break;
+    switch(destination_port) {
       case 53:
-        this.encapsulated_packet = new DNS(raw_data);
-        break;
-      case 80:
-        if(raw_data!=null){
-          this.encapsulated_packet = new HTTP(raw_data);
-          //System.out.println("HTTP raw data : "+Tools.hexToString(this.raw_data));
-        }
-        break;
-      case 67:
-      case 68:
-        this.encapsulated_packet = new DHCP(raw_data);
-        break;
-      default:
-        this.encapsulated_packet = null;
-        break;
-    }
-    if(this.encapsulated_packet == null) {
-      switch(destination_port) {
-        case 21:
-          if(raw_data!=null){
-            this.encapsulated_packet = new FTP(raw_data);
-          }
-          break;
-        case 53:
+        try{
           this.encapsulated_packet = new DNS(raw_data);
           break;
-        case 80:
-          if(raw_data!=null){
-            this.encapsulated_packet = new HTTP(raw_data);
-            //System.out.println("HTTP raw data : "+Tools.hexToString(this.raw_data));
-          }
-          break;
-        case 67:
-        case 68:
+        } catch (NotADNSPacketException nadnse) {
+          this.encapsulated_packet = null;
+        }
+      case 67:
+      case 68:
+        if(this.containsDHCPmagicCookie()){
           this.encapsulated_packet = new DHCP(raw_data);
           break;
+        }
+      default:
+        this.encapsulated_packet = null;
+        if(this.containsDHCPmagicCookie()){
+          this.encapsulated_packet = new DHCP(raw_data);
+        }
+        try{
+          this.encapsulated_packet = new DNS(raw_data);
+          break;
+        } catch (NotADNSPacketException nadnse) {
+          this.encapsulated_packet = null;
+        }
+        break;
+    }
+    //no protocol found from source port
+    if(this.encapsulated_packet == null) {
+      switch(destination_port) {
+        case 53:
+          try{
+            this.encapsulated_packet = new DNS(raw_data);
+            break;
+          } catch (NotADNSPacketException nadnse) {
+            this.encapsulated_packet = null;
+          }
+        case 67:
+        case 68:
+          if(this.containsDHCPmagicCookie()){
+            this.encapsulated_packet = new DHCP(raw_data);
+            break;
+          }
         default:
           this.encapsulated_packet = null;
+          if(this.containsDHCPmagicCookie()){
+            this.encapsulated_packet = new DHCP(raw_data);
+          }
+          try{
+            this.encapsulated_packet = new DNS(raw_data);
+            break;
+          } catch (NotADNSPacketException nadnse) {
+            this.encapsulated_packet = null;
+          }
           break;
       }
     }
@@ -165,6 +174,28 @@ public class TCP extends Layer4 {
     return res+"\n";
   }
 
+  public void constructFTP(){
+    if(raw_data!=null){
+      this.encapsulated_packet = new FTP(raw_data);
+    }
+  }
+
+  public void constructHTTP(){
+    if(raw_data!=null){
+      this.encapsulated_packet = new HTTP(raw_data);
+    }
+  }
+
+  public boolean containsDHCPmagicCookie(){
+    if(raw_data!=null){
+      String hexData = Tools.hexToString(raw_data);
+      if(!hexData.trim().equals("")) {
+        return hexData.contains("63825363");
+      }
+    }
+    return false;
+  }
+
   @Override
   public String toString() {
 
@@ -176,7 +207,7 @@ public class TCP extends Layer4 {
       res += "\n";
       res += encapsulated_packet.toString();
     } else if(header.get("segment data")!=null){
-      res += "Data \t\t\t"+Tools.hexToAscii(header.get("segment data"));
+      res += "Data :\n"+Tools.hexToAscii(header.get("segment data"));
     }
     return res;
   }

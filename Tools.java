@@ -221,10 +221,8 @@ public class Tools {
           String str = hex.substring(i, i+2);
           int ascii = Integer.parseInt(str, 16);
           //readable ascii only
-          if(ascii>=32&&ascii<=126){
+          if(ascii==9||ascii==10||ascii==13||(ascii>=32&&ascii<=126)){
             output.append((char) ascii);
-          } else if (ascii == 0) {
-            break;
           } else {
             output.append('.');
           }

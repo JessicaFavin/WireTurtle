@@ -47,7 +47,7 @@ public class ICMP extends Layer4 {
     res += "type \t"+Tools.icmpProtocol(header.get("type"), header.get("code"))+"\n";
     res += "id \t0x"+header.get("id")+"\n";
     res += "seq \t"+Integer.parseInt(header.get("seq"),16)+"\n";
-    res += "data \t"+(header.get("data"))+"\n";
+    res += "data \t"+Tools.hexToAscii(header.get("data"))+"\n";
     return res;
   }
 

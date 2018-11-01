@@ -29,7 +29,7 @@ public class PCAP {
     File file = new File(filename);
 		int bytes_to_read = (int) file.length();
 		byte[] fileArray;
-		snapshot = new ArrayList<Ethernet>();
+		this.snapshot = new ArrayList<Ethernet>();
     this.conversations = new HashMap<String,ConversationTCP>();
     this.filterProtocol = "";
     this.convNumber = -1;
@@ -79,8 +79,8 @@ public class PCAP {
       if(ef.isTCP()){
         id = (ef.getIpSrc()+ef.getPortSrc()+ef.getIpDst()+ef.getPortDst());
         idReversed = (ef.getIpDst()+ef.getPortDst()+ef.getIpSrc()+ef.getPortSrc());
-        System.out.println("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
-        System.out.println("ID: "+id+" "+idReversed);
+        //System.out.println("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
+        //System.out.println("ID: "+id+" "+idReversed);
         if(inHandshake==0){
           if(ef.hasSyn()) {
             //System.out.println("Syn");
@@ -102,7 +102,7 @@ public class PCAP {
             //System.out.println("Ack");
             inHandshake++;
             //add couple in conv
-            conversations.put(id, new ConversationTCP());
+            conversations.put(id, new ConversationTCP(id));
             //System.out.println("Contains : "+conversations.containsKey(id));
             inHandshake = 0;
             continue;
@@ -112,11 +112,11 @@ public class PCAP {
         }
         //------------Not a handshake message--------------
         if(conversations.containsKey(id)){
-          conversations.get(id).addData(ef.getTcpSeq(), ef.getTcpData());
-          System.out.println("Added");
+          conversations.get(id).addPaquet(ef);
+          //System.out.println("Added");
         } else if(conversations.containsKey(idReversed)){
-          conversations.get(idReversed).addData(ef.getTcpSeq(), ef.getTcpData());
-          System.out.println("Added");
+          conversations.get(idReversed).addPaquet(ef);
+          //System.out.println("Added");
         }
       }
     }
@@ -127,9 +127,9 @@ public class PCAP {
 
   private String color(Ethernet ef) {
     String res = "";
-    if(ef.isFTP()){
+    if(ef.isFTP() || this.containedInConversation(ef)){
       res += "\u001B[92m";
-    } else if(ef.isHTTP()) {
+    } else if(ef.isHTTP() || this.containedInConversation(ef)) {
       res += "\u001B[32m";
     } else if(ef.isDHCP()) {
       res += "\u001B[33m";
@@ -147,6 +147,16 @@ public class PCAP {
       res += "\u001B[95m";
     }
     return res;
+  }
+
+  private boolean containedInConversation(Ethernet ef) {
+    boolean contained = false;
+    for (Map.Entry entry : conversations.entrySet()) {
+      if(((ConversationTCP) entry.getValue()).contains(ef)) {
+        contained = true;
+      }
+    }
+    return contained;
   }
 
   public String displayProtocolPackets() {
@@ -197,13 +207,13 @@ public class PCAP {
             }
           break;
         case "HTTP":
-            if(ef.isHTTP()){
+            if(ef.isHTTP() || this.containedInConversation(ef)){
               res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }
           break;
         case "FTP":
-            if(ef.isFTP()){
+            if(ef.isFTP() || this.containedInConversation(ef)){
               res += ("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
               res += color(ef)+ef.toString();
             }

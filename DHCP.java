@@ -101,10 +101,10 @@ public class DHCP extends Layer7 {
     //xID
     res += "Transaction ID : Ox"+header.get("transaction id")+"\n";
     //addresses
-    res += "Client IP address : "+Tools.ipAddress(header.get("client IP"))+"\n";
-    res += "Your address : "+Tools.ipAddress(header.get("your IP"))+"\n";
-    res += "Next server : "+Tools.ipAddress(header.get("server IP"))+"\n";
-    res += "Client MAC address : "+Tools.macAddress(header.get("client hardware address").substring(0,12))+"\n";
+    res += "Client IP address :   "+Tools.ipAddress(header.get("client IP"))+"\n";
+    res += "Your address :        "+Tools.ipAddress(header.get("your IP"))+"\n";
+    res += "Next server :         "+Tools.ipAddress(header.get("server IP"))+"\n";
+    res += "Client MAC address :  "+Tools.macAddress(header.get("client hardware address").substring(0,12))+"\n";
     return res;
   }
 

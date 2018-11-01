@@ -26,17 +26,22 @@ public class DNS extends Layer7 {
   private ArrayList<DNSadditional> additionals;
   private ArrayList<DNSauthority> authorities;
 
-  public DNS(byte[] packet) {
-    this.raw_data = null;
-    this.header = new HashMap<String, String>();
-    this.flags = new HashMap<String, Integer>();
-    this.queries = new ArrayList<DNSquery>();
-    this.answers = new ArrayList<DNSanswer>();
-    this.additionals = new ArrayList<DNSadditional>();
-    this.authorities = new ArrayList<DNSauthority>();
-    this.setPacket(packet);
-    this.setFlags();
-    this.setData();
+  public DNS(byte[] packet) throws NotADNSPacketException {
+    try {
+      this.raw_data = null;
+      this.header = new HashMap<String, String>();
+      this.flags = new HashMap<String, Integer>();
+      this.queries = new ArrayList<DNSquery>();
+      this.answers = new ArrayList<DNSanswer>();
+      this.additionals = new ArrayList<DNSadditional>();
+      this.authorities = new ArrayList<DNSauthority>();
+      this.setPacket(packet);
+      this.setFlags();
+      this.setData();
+    } catch (Exception e) {
+      throw new NotADNSPacketException();
+    }
+
   }
 
   @Override

@@ -3,27 +3,68 @@ import java.util.*;
 import java.io.*;
 
 public class ConversationTCP {
-  private HashMap<String, String> dataList;
+  private String id;
   private String data;
+  private String protocol;
+  private ArrayList<Ethernet> packetList;
 
-  public ConversationTCP() {
-    this.dataList = new HashMap<String,String>();
+
+  public ConversationTCP(String id) {
+    this.id = id;
     this.data = "";
+    this.protocol = "unknown";
+    this.packetList = new ArrayList<Ethernet>();
   }
 
-  public void addData(String seqNumber, String data) {
-    this.dataList.put(seqNumber, data);
+  public void addPaquet(Ethernet ef) {
+    if(!this.packetList.contains(ef)){
+      this.packetList.add(ef);
+      //this.dataList.add(ef.getTcpData());
+    } else {
+      int packetIndex = this.packetList.indexOf(ef);
+      //removes old one
+      this.packetList.remove(packetIndex);
+      //add the most updated one
+      this.packetList.add(packetIndex, ef);
+
+    }
   }
 
   public void recompose() {
     String res = "";
-    System.out.println("Length : "+dataList.size());
     int i = 1;
-    for(Map.Entry entry : dataList.entrySet()) {
-      System.out.println("i : "+(i++)+" res : "+Tools.hexToAscii(entry.getValue().toString()));
-      res += Tools.hexToAscii(entry.getValue().toString());
+    String currentId = "";
+    String data;;
+    for(Ethernet ef : packetList) {
+      data = ef.getTcpData();
+      if(!data.trim().equals("")){
+        currentId = (ef.getIpSrc()+ef.getPortSrc()+ef.getIpDst()+ef.getPortDst());
+        if(this.id.equals(currentId)){
+            res += "> \u001B[34m";
+        } else {
+          res += "< \u001B[31m";
+        }
+        res += Tools.hexToAscii(data)+"\u001B[0m\n";
+      }
     }
     this.data = res;
+    this.guessProtocol();
+  }
+
+  private void guessProtocol() {
+    if(this.data.contains("HTTP")){
+      this.protocol = "HTTP";
+    }
+    if(this.data.contains("227 Entering Passive Mode")) {
+      //only recognizes passive FTP
+      this.protocol = "FTP";
+      //retrieve data port with regex maybe
+      //(192,168,0,193,28,86)
+    }
+  }
+
+  public boolean contains(Ethernet ef) {
+    return this.packetList.contains(ef);
   }
 
   @Override

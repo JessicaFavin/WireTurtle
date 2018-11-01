@@ -31,36 +31,6 @@ public class FTP extends Layer7 {
     byte[] buffer;
     int size;
     header.put("ftp command", Tools.hexToString(packet));
-    /*
-    //System.out.println(Tools.hexToString(packet));
-    packet: for(int i=0; i< fields_size.length; i++) {
-      size = fields_size[i];
-      if(size==-1) {
-        //data length including padding
-        if(header_total == packet.length){
-          size = 0;
-          header.put(fields_name[i], "");
-        } else {
-          size = (packet.length-header_total);
-          //fields_size[i] = size;
-          buffer = new byte[size];
-          buffer = Arrays.copyOfRange(packet, offset, offset+size);
-          //System.out.println("buffer : "+Tools.hexToString(buffer));
-          //need to differentiate data from options ??
-          this.raw_data = buffer;
-          header.put(fields_name[i], Tools.hexToString(buffer));
-        }
-      } else if( size == 0){
-        //System.out.println("empty");
-        header.put(fields_name[i], "");
-      } else {
-        buffer = new byte[size];
-        buffer = Arrays.copyOfRange(packet, offset, offset+size);
-        header.put(fields_name[i], Tools.hexToString(buffer));
-      }
-      offset += size;
-    }
-    */
   }
 
   public void setOptions() {

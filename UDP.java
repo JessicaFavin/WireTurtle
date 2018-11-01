@@ -26,8 +26,12 @@ public class UDP extends Layer4 {
         }
         break;
       case 53:
-        this.encapsulated_packet = new DNS(raw_data);
-        break;
+        try{
+          this.encapsulated_packet = new DNS(raw_data);
+          break;
+        } catch (NotADNSPacketException nadnse) {
+          this.encapsulated_packet = null;
+        }
       case 80:
         if(raw_data!=null){
           this.encapsulated_packet = new HTTP(raw_data);
@@ -38,7 +42,12 @@ public class UDP extends Layer4 {
         this.encapsulated_packet = new DHCP(raw_data);
         break;
       default:
-        this.encapsulated_packet = null;
+        try{
+          this.encapsulated_packet = new DNS(raw_data);
+          break;
+        } catch (NotADNSPacketException nadnse) {
+          this.encapsulated_packet = null;
+        }
         break;
     }
     if(this.encapsulated_packet == null) {
@@ -49,8 +58,12 @@ public class UDP extends Layer4 {
           }
           break;
         case 53:
-          this.encapsulated_packet = new DNS(raw_data);
-          break;
+          try{
+            this.encapsulated_packet = new DNS(raw_data);
+            break;
+          } catch (NotADNSPacketException nadnse) {
+            this.encapsulated_packet = null;
+          }
         case 80:
           if(raw_data!=null){
             this.encapsulated_packet = new HTTP(raw_data);
@@ -61,7 +74,12 @@ public class UDP extends Layer4 {
           this.encapsulated_packet = new DHCP(raw_data);
           break;
         default:
-          this.encapsulated_packet = null;
+          try{
+            this.encapsulated_packet = new DNS(raw_data);
+            break;
+          } catch (NotADNSPacketException nadnse) {
+            this.encapsulated_packet = null;
+          }
           break;
       }
     }
