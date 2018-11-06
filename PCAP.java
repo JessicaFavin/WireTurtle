@@ -62,7 +62,13 @@ public class PCAP {
         //System.out.println("packet size "+ packet_size);
 				value = fis.read(byteArray, 0, packet_size);
 				bytes_to_read -= value;
-				snapshot.add(new Ethernet(Arrays.copyOfRange(byteArray, 0, value)));
+        try {
+          snapshot.add(new Ethernet(Arrays.copyOfRange(byteArray, 0, value)));
+        } catch (Exception e) {
+          System.out.println("Are you sure this is ethernet ?");
+          System.out.println("I think I'll stop now. Just to be safe.");
+          System.exit(2);
+        }
         packet_count++;
 			}
       recomposeConversations();
