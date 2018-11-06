@@ -10,12 +10,17 @@ public class IP extends Layer3 {
   "src ip", "dst ip"};
   private int[] fields_size = {1,1,2,2,2,1,1,2,4,4};
   private static int header_total = 20;
+  private HashMap<String, Integer> flags;
+  private final String[] flags_name = {"Reserved", "Don't Fragment (DF)", "More Fragment (MF)",};
+  private final int[] flags_mask = {0x8000, 0x4000, 0x2000};
+  private final int[] flags_shift = {15, 14, 13};
   private HashMap<String, String> header;
   private Layer4 encapsulated_packet;
   private byte[] raw_data;
 
   public IP(byte[] packet) {
     this.header = new HashMap<String, String>();
+    this.flags = new HashMap<String, Integer>();
     this.setPacket(packet);
     switch(Integer.parseInt(header.get("protocol"), 16)) {
       case 1:
@@ -45,7 +50,25 @@ public class IP extends Layer3 {
       offset += size;
     }
     raw_data = Arrays.copyOfRange(packet, offset, packet.length);
+    this.setFlags();
+  }
 
+  private void setFlags() {
+    int flags_hex = Integer.parseInt(header.get("flags"), 16);
+    for(int i=0; i<flags_name.length; i++) {
+      int value = (flags_hex & flags_mask[i])>> flags_shift[i];
+      flags.put(flags_name[i], value);
+    }
+  }
+
+  public String flagsToString() {
+    String res = "";
+    for(int i=0; i<flags_name.length; i++){
+      if(flags.get(flags_name[i])!=null && flags.get(flags_name[i])!=0){
+        res += flags_name[i]+" ";
+      }
+    }
+    return res+"\n";
   }
 
   @Override
@@ -57,6 +80,7 @@ public class IP extends Layer3 {
     res += ("Destination \t"+Tools.ipAddress(header.get("dst ip"))+"\n");
     res += ("Type \t\t"+Tools.ipProtocol(header.get("protocol"))+"\n");
     res += ("Time to live \t"+Integer.parseInt(header.get("ttl"),16)+"\n");
+    res += "Flags: "+flagsToString();
 
     if(encapsulated_packet!=null){
       res += "\n";
