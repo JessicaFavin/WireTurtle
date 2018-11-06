@@ -127,14 +127,14 @@ public class PCAP {
 
   private String color(Ethernet ef) {
     String res = "";
-    if(ef.isFTP() || this.containedInConversation(ef)){
-      res += "\u001B[92m";
-    } else if(ef.isHTTP() || this.containedInConversation(ef)) {
-      res += "\u001B[32m";
-    } else if(ef.isDHCP()) {
+    if(ef.isDHCP()) {
       res += "\u001B[33m";
     } else if(ef.isDNS()) {
       res += "\u001B[34m";
+    } else if(ef.isFTP() || this.containedInConversation(ef)){
+      res += "\u001B[92m";
+    } else if(ef.isHTTP() || this.containedInConversation(ef)) {
+      res += "\u001B[32m";
     } else if(ef.isTCP()) {
       res += "\u001B[35m";
     } else if(ef.isUDP()) {

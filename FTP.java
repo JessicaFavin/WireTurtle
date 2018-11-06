@@ -30,7 +30,9 @@ public class FTP extends Layer7 {
     int offset = 0;
     byte[] buffer;
     int size;
-    header.put("ftp command", Tools.hexToString(packet));
+    if(packet!=null) {
+      header.put("ftp command", Tools.hexToString(packet));
+    }
   }
 
   public void setOptions() {
