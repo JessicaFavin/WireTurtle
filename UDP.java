@@ -91,7 +91,7 @@ public class UDP extends Layer4 {
       res += "\n";
       res += encapsulated_packet.toString();
     } else {
-      res += "Data \t\t\t"+Tools.displayRawData(header.get("data"));
+      res += "Data \n"+Tools.hexToAscii(header.get("data"));//Tools.displayRawData(header.get("data"));
     }
     return res;
   }
