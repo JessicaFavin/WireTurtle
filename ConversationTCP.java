@@ -54,12 +54,23 @@ public class ConversationTCP {
   private void guessProtocol() {
     if(this.data.contains("HTTP")){
       this.protocol = "HTTP";
+      for(Ethernet ef: packetList){
+        if(!ef.isDHCP() && !ef.isDNS() && !ef.isFTP()) {
+          ef.constructHTTP();
+        }
+      }
     }
     if(this.data.contains("227 Entering Passive Mode")) {
       //only recognizes passive FTP
       this.protocol = "FTP";
       //retrieve data port with regex maybe
       //(192,168,0,193,28,86)
+      for(Ethernet ef: packetList){
+        if(!ef.isDHCP() && !ef.isDNS() && !ef.isHTTP()) {
+          ef.constructFTP();
+          System.out.println("PAcket conv "+ef);
+        }
+      }
     }
   }
 

@@ -191,4 +191,17 @@ public class IP extends Layer3 {
     return "";
   }
 
+
+    public void constructHTTP() {
+      if(this.isTCP()) {
+        ((TCP) this.encapsulated_packet).constructHTTP();
+      }
+    }
+
+    public void constructFTP() {
+      if(this.isTCP()) {
+        ((TCP) this.encapsulated_packet).constructFTP();
+      }
+    }
+
 }

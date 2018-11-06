@@ -197,5 +197,16 @@ public class Ethernet extends Layer2 {
     return "";
   }
 
+  public void constructHTTP() {
+    if(this.isIP()) {
+      ((IP) this.encapsulated_packet).constructHTTP();
+    }
+  }
+
+  public void constructFTP() {
+    if(this.isIP()) {
+      ((IP) this.encapsulated_packet).constructFTP();
+    }
+  }
 
 }
