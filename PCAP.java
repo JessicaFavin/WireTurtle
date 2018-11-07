@@ -79,7 +79,10 @@ public class PCAP {
         packet_count++;
 			}
       recomposeConversations();
-		} catch (Exception e) {
+		} catch(FileNotFoundException fnfe){
+      System.out.println("The file given wasn't there.");
+      System.exit(3);
+    }catch (Exception e) {
 			e.printStackTrace();
 		}
   }
