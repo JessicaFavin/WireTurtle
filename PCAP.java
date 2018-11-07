@@ -228,7 +228,11 @@ public class PCAP {
 
       res += "\u001B[0m";
     }
-    res += conversations.size()+" conversations were found.";
+    String conv_num = String.valueOf(conversations.size());
+    if(conv_num.equals("0")){
+      conv_num = "No";
+    }
+    res += conv_num+" conversations found.";
     return res;
   }
 
@@ -241,6 +245,13 @@ public class PCAP {
         res += entry.getValue().toString();
       }
       i++;
+    }
+    if(which==0 || res.trim().equals("")) {
+      String conv_num = String.valueOf(conversations.size());
+      if(conv_num.equals("0")){
+        conv_num = "No";
+      }
+      res += conv_num+" conversations found.";
     }
     return res;
   }
