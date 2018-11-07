@@ -44,6 +44,13 @@ public class PCAP {
 				bytes_to_read -= value;
 				hex_data = Tools.hexToString(Arrays.copyOfRange(byteArray,0,value));
 				global_header.put(global_header_tag[i],hex_data);
+        //&& ! hex_data.equals("d4c3b2a1")
+        if(global_header_tag[i].equals("magic number") && ! (hex_data.equals("a1b2c3d4") || hex_data.equals("d4c3b2a1"))){
+          System.out.println("This doesn't seem to be a PCAP file.");
+          System.out.println("Bye now.");
+          System.exit(1);
+
+        }
 			}
 			int packet_size = 0;
       int packet_count = 1;
