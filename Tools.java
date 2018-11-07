@@ -60,6 +60,9 @@ public class Tools {
       case "0800":
         res += " (IPv4)";
         break;
+      case "86dd":
+        res += " (IPv6)";
+        break;
       default:
         break;
     }
