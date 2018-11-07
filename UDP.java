@@ -30,11 +30,15 @@ public class UDP extends Layer4 {
     switch(source_port) {
       case 80:
       case 8080:
-        this.encapsulated_packet = new HTTP(raw_data);
+        if(this.raw_data!=null){
+          this.encapsulated_packet = new HTTP(raw_data);
+        }
         break;
       case 21:
       case 22:
-        this.encapsulated_packet = new FTP(raw_data);
+        if(this.raw_data!=null){
+          this.encapsulated_packet = new FTP(raw_data);
+        }
         break;
       default:
         break;
@@ -44,11 +48,15 @@ public class UDP extends Layer4 {
       switch(destination_port) {
         case 80:
         case 8080:
-          this.encapsulated_packet = new HTTP(raw_data);
+          if(this.raw_data!=null){
+            this.encapsulated_packet = new HTTP(raw_data);
+          }
           break;
         case 21:
         case 22:
-          this.encapsulated_packet = new FTP(raw_data);
+          if(this.raw_data!=null){
+            this.encapsulated_packet = new FTP(raw_data);
+          }
           break;
         default:
           this.encapsulated_packet = null;

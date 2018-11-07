@@ -79,4 +79,8 @@ public class ConversationTCP {
     return this.data+"\n";
   }
 
+  public String getProtocol() {
+    return this.protocol;
+  }
+
 }

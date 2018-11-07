@@ -134,9 +134,9 @@ public class PCAP {
       res += "\u001B[33m";
     } else if(ef.isDNS()) {
       res += "\u001B[34m";
-    } else if(ef.isFTP() || this.containedInConversation(ef)){
-      res += "\u001B[92m";
-    } else if(ef.isHTTP() || this.containedInConversation(ef)) {
+    } else if(ef.isFTP()){
+      res += "\u001B[94m";
+    } else if(ef.isHTTP()) {
       res += "\u001B[32m";
     } else if(ef.isTCP()) {
       res += "\u001B[35m";
@@ -153,13 +153,12 @@ public class PCAP {
   }
 
   private boolean containedInConversation(Ethernet ef) {
-    boolean contained = false;
     for (Map.Entry entry : conversations.entrySet()) {
       if(((ConversationTCP) entry.getValue()).contains(ef)) {
-        contained = true;
+        return true;
       }
     }
-    return contained;
+    return false;
   }
 
   public String displayProtocolPackets() {
