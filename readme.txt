@@ -54,3 +54,6 @@ destination habituels de HTTP ou FTP.
 Si HTTP ou FTP communiquent sur d'autres port ces protocoles seront détectés
 grâce à leur appartenance à une conversation dont l'attribut protocole
 correspond.
+Si aucun protocole n'est reconnu à la couche 4 les données restantes sont
+affichés en ASCII (les ASCII visible, les tabulations et les sauts de lignes
+uniquement).
