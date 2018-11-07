@@ -62,7 +62,6 @@ public class UDP extends Layer4 {
     int offset = 0;
     byte[] buffer;
     int size;
-    //System.out.println(Tools.hexToString(packet));
     for(int i=0; i< fields_size.length; i++) {
       size = fields_size[i];
       if(size==0) {

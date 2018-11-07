@@ -79,106 +79,82 @@ public class DNS extends Layer7 {
     String str = "";
 
     for(int i=0; i<queries_nb; i++) {
-      //System.out.println("Query n°"+i);
       //read bytes until 00 -> name + name length for answers maybe
-      //System.out.print("\t");
       while(!(next = data_hex.substring(offset, offset+2)).equals("00")){
         str += next;
         offset += 2;
-        //System.out.print(next);
       }
       offset += 2;
-      //System.out.println("");
       // read 2 bytes for type then 2 bytes for class
       String type = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\tType "+type);
       String dnsClass = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\tClass "+dnsClass);
       queries.add(new DNSquery(str,type,dnsClass));
     }
     //answers
     for(int i=0; i<answers_nb; i++) {
-      //System.out.println("Answer n°"+i);
       //read bytes until 00 -> name or name length if set
       str = "";
       String beginning = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\t"+beginning);
       // read 2 bytes for type then 2 bytes for class
       String type = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\tType "+type);
       String dnsClass = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\tClass "+dnsClass);
       // 4 bytes for ttl
       String ttl = data_hex.substring(offset, offset+8);
       offset += 8;
       // 2 bytes for data length + data length bytes for address
       int data_length = Integer.parseInt(data_hex.substring(offset, offset+4) ,16) * 2;
       offset += 4;
-      //System.out.println("\tdata length "+data_length);
       // 16 bytes for IPv6 4 bytes for IPv4
       String dnsData = data_hex.substring(offset, offset+data_length);
       offset += data_length;
-      //System.out.println("\tdata "+dnsData);
       answers.add(new DNSanswer(type,dnsClass,ttl, dnsData));
     }
 
     for(int i=0; i<auth_nb; i++) {
-      //System.out.println("Answer n°"+i);
       //read bytes until 00 -> name or name length if set
       str = "";
       String beginning = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\t"+beginning);
       // read 2 bytes for type then 2 bytes for class
       String type = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\tType "+type);
       String dnsClass = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\tClass "+dnsClass);
       // 4 bytes for ttl
       String ttl = data_hex.substring(offset, offset+8);
       offset += 8;
       // 2 bytes for data length + data length bytes for address
       int data_length = Integer.parseInt(data_hex.substring(offset, offset+4) ,16) * 2;
       offset += 4;
-      //System.out.println("\tdata length "+data_length);
       // 16 bytes for IPv6 4 bytes for IPv4
       String dnsData = data_hex.substring(offset, offset+data_length);
       offset += data_length;
-      //System.out.println("\tdata "+dnsData);
       authorities.add(new DNSauthority(type,dnsClass,ttl, dnsData));
     }
     for(int i=0; i<add_nb; i++) {
-      //System.out.println("Answer n°"+i);
       //read bytes until 00 -> name or name length if set
       str = "";
       String beginning = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\t"+beginning);
       // read 2 bytes for type then 2 bytes for class
       String type = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\tType "+type);
       String dnsClass = data_hex.substring(offset, offset+4);
       offset += 4;
-      //System.out.println("\tClass "+dnsClass);
       // 4 bytes for ttl
       String ttl = data_hex.substring(offset, offset+8);
       offset += 8;
       // 2 bytes for data length + data length bytes for address
       int data_length = Integer.parseInt(data_hex.substring(offset, offset+4) ,16) * 2;
       offset += 4;
-      //System.out.println("\tdata length "+data_length);
       // 16 bytes for IPv6 4 bytes for IPv4
       String dnsData = data_hex.substring(offset, offset+data_length);
       offset += data_length;
-      //System.out.println("\tdata "+dnsData);
       additionals.add(new DNSadditional(type,dnsClass,ttl, dnsData));
     }
   }
@@ -196,7 +172,6 @@ public class DNS extends Layer7 {
     String res = "Domain Name System (DNS)\n";
     res += "Transaction ID : \t0x"+header.get("id")+"\n";
     res += "Reply code : \t\t"+Tools.dnsReplyCode(flags.get("reply code"))+"\n";
-    //res += "Looking for :\t"+Tools.dnsResolution(header.get("data"))+"\n";
     res+="\n";
     if(queries_nb!=0){
       res += "Query\n";

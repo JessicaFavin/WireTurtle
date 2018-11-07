@@ -75,31 +75,21 @@ public class TCP extends Layer4 {
     int offset = 0;
     byte[] buffer;
     int size;
-    //System.out.println(Tools.hexToString(packet));
     packet: for(int i=0; i< fields_size.length; i++) {
       size = fields_size[i];
-      //System.out.println(fields_name[i]);
       if(size==-1) {
         //data length including padding
         if(header_total == packet.length){
           size = 0;
           header.put(fields_name[i], "");
         } else {
-          //System.out.println(Integer.parseInt(header.get("src port"), 16));
-          //System.out.println(Integer.parseInt(header.get("dst port"), 16));
-          //System.out.println("------------Set raw data "+fields_name[i]);
-          //System.out.println("packet length : "+packet.length);
-          //System.out.println("header total : "+this.header_total);
           size = (packet.length-header_total);
-          //fields_size[i] = size;
           buffer = new byte[size];
           buffer = Arrays.copyOfRange(packet, offset, offset+size);
-          //System.out.println("buffer : "+Tools.hexToString(buffer));
           this.raw_data = buffer;
           header.put(fields_name[i], Tools.hexToString(buffer));
         }
       } else if( size == 0){
-        //System.out.println("empty");
         header.put(fields_name[i], "");
       } else {
         buffer = new byte[size];
@@ -115,9 +105,7 @@ public class TCP extends Layer4 {
   }
 
   public void setLengthAndFlags(String hex) {
-    //System.out.println("length flags : "+hex);
     int header_length = Integer.parseInt(hex.substring(0,1),16)*4;
-    //System.out.println("header length="+header_length);
     if(header_length!=header_total){
       //set  options size
       int option_size = header_length - header_total;
@@ -138,7 +126,6 @@ public class TCP extends Layer4 {
     int flags_hex = Integer.parseInt(header.get("flags"), 16);
     for(int i=0; i<flags_name.length; i++) {
       int value = (flags_hex & flags_mask[i])>> flags_shift[i];
-      //System.out.println("Adding flag "+flags_name[i]+":"+value);
       flags.put(flags_name[i], value);
     }
   }

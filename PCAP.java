@@ -55,8 +55,6 @@ public class PCAP {
 			int packet_size = 0;
       int packet_count = 1;
 			while(bytes_to_read>0){
-        //System.out.println("-------------Packet n° "+ packet_count+" --------------");
-        //System.out.println("bytes to read "+ bytes_to_read);
 				//reads all packets in the snapshot
 				for(int i = 0; i<packet_header_size.length; i++) {
 					value = fis.read(byteArray, 0, packet_header_size[i]);
@@ -66,7 +64,6 @@ public class PCAP {
 					}
 				}
 				//Ethernet
-        //System.out.println("packet size "+ packet_size);
 				value = fis.read(byteArray, 0, packet_size);
 				bytes_to_read -= value;
         try {
@@ -95,11 +92,8 @@ public class PCAP {
       if(ef.isTCP()){
         id = (ef.getIpSrc()+ef.getPortSrc()+ef.getIpDst()+ef.getPortDst());
         idReversed = (ef.getIpDst()+ef.getPortDst()+ef.getIpSrc()+ef.getPortSrc());
-        //System.out.println("--------- Packet #"+(snapshot.indexOf(ef)+1)+" ---------\n");
-        //System.out.println("ID: "+id+" "+idReversed);
         if(inHandshake==0){
           if(ef.hasSyn()) {
-            //System.out.println("Syn");
             inHandshake++;
             continue;
           } else {
@@ -107,7 +101,6 @@ public class PCAP {
           }
         } else if(inHandshake==1){
           if(ef.hasSyn() && ef.hasAck()) {
-            //System.out.println("Syn Ack");
             inHandshake++;
             continue;
           } else {
@@ -115,11 +108,9 @@ public class PCAP {
           }
         } else if(inHandshake==2){
           if(ef.hasAck()) {
-            //System.out.println("Ack");
             inHandshake++;
             //add couple in conv
             conversations.put(id, new ConversationTCP(id));
-            //System.out.println("Contains : "+conversations.containsKey(id));
             inHandshake = 0;
             continue;
           } else {
@@ -129,10 +120,8 @@ public class PCAP {
         //------------Not a handshake message--------------
         if(conversations.containsKey(id)){
           conversations.get(id).addPaquet(ef);
-          //System.out.println("Added");
         } else if(conversations.containsKey(idReversed)){
           conversations.get(idReversed).addPaquet(ef);
-          //System.out.println("Added");
         }
       }
     }

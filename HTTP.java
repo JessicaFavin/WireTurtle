@@ -3,47 +3,29 @@ import java.util.*;
 import java.io.*;
 
 public class HTTP extends Layer7 {
-  //private static final String[] fields_name = {"id", "flags", "questions", "answer RRs",
-  //"authority RRs", "addiditonal RRs", "data"};
-  //private int[] fields_size = {2, 2, 2, 2, 2, 2, 0};
-  //private static int header_total = 12;
   private HashMap<String, String> header;
   private byte[] raw_data;
-
-
-/*
-HTTP/1.1 200 OK\r\n
-P3P: policyref="http://www.googleadservices.com/pagead/p3p.xml", CP="NOI DEV PSA PSD IVA PVD OTP OUR OTR IND OTC"\r\n
-Content-Type: text/html; charset=ISO-8859-1\r\n
-Content-Encoding: gzip\r\n
-Server: CAFE/1.0\r\n
-Cache-control: private, x-gzip-ok=""\r\n
-Content-length: 1272\r\n
-Date: Thu, 13 May 2004 10:17:14 GMT\r\n
-\r\n
-...........W.s.8..\r\n
-\r\n
-*/
+  protected Packet encapsulated_packet;
 
   public HTTP(byte[] packet) {
     this.raw_data = packet;
-    //System.out.println("HTTP");
-    //System.out.println("Raw data set");
-    //System.out.println("RD : "+Tools.hexToString(this.raw_data));
     this.header = new HashMap<String, String>();
-    //this.setPacket(packet);
+    this.setPacket(packet);
+    this.encapsulated_packet = null;
   }
 
   @Override
   public void setPacket(byte[] packet) {
-
+    if(packet!=null) {
+      header.put("http content", Tools.hexToString(packet));
+    }
   }
 
   @Override
   public String toString() {
     String res = "Hypertext Transfer Protocol (HTTP)\n";
-    if(this.raw_data!=null){
-      res += Tools.hexToAscii(Tools.hexToString(this.raw_data));
+    if(header.get("http content")!=null){
+      res += Tools.hexToAscii(header.get("http content"));
     }
     res += "\n";
     return res;

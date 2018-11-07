@@ -68,7 +68,6 @@ public class ConversationTCP {
       for(Ethernet ef: packetList){
         if(!ef.isDHCP() && !ef.isDNS() && !ef.isHTTP()) {
           ef.constructFTP();
-          System.out.println("PAcket conv "+ef);
         }
       }
     }

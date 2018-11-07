@@ -37,7 +37,6 @@ public class DHCP extends Layer7 {
     int offset = 0;
     byte[] buffer;
     int size;
-    //System.out.println(Tools.hexToString(packet));
     packet: for(int i=0; i< fields_size.length; i++) {
       size = fields_size[i];
       if(size==-1) {
@@ -47,16 +46,12 @@ public class DHCP extends Layer7 {
           header.put(fields_name[i], "");
         } else {
           size = (packet.length-header_total);
-          //fields_size[i] = size;
           buffer = new byte[size];
           buffer = Arrays.copyOfRange(packet, offset, offset+size);
-          //System.out.println("buffer : "+Tools.hexToString(buffer));
-          //need to differentiate data from options ??
           this.raw_data = buffer;
           header.put(fields_name[i], Tools.hexToString(buffer));
         }
       } else if( size == 0){
-        //System.out.println("empty");
         header.put(fields_name[i], "");
       } else {
         buffer = new byte[size];
@@ -84,7 +79,6 @@ public class DHCP extends Layer7 {
     Integer opCode, opLength;
     String opData;
     boolean stop = false;
-    //System.out.println("size "+options.());
     while(!stop || offset<op.length()) {
       //read opcode
       size = 2;
@@ -96,7 +90,6 @@ public class DHCP extends Layer7 {
         stop = true;
         break;
       }
-      // /System.out.println("option "+opCode+" "+opLength);
       //read option data
       opData = op.substring(offset, offset+=(opLength*2));
       options.put(opCode, opData);
