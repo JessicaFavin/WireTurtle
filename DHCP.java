@@ -11,6 +11,10 @@ public class DHCP extends Layer7 {
   "client hardware address", "server name", "boot filename", "options"};
   private int[] fields_size = {1, 1, 1, 1, 4, 2, 2, 4, 4, 4, 4, 16, 64, 128, -1};
   private static int header_total = 236;
+  private HashMap<String, Integer> flags;
+  private final String[] flags_name = {"broadcast"};
+  private final int[] flags_mask = {0x8000};
+  private final int[] flags_shift = {15};
   private HashMap<String, String> header;
   private HashMap<Integer, String> options;
   private Layer7 encapsulated_packet;
@@ -21,6 +25,7 @@ public class DHCP extends Layer7 {
   public DHCP(byte[] packet) {
     this.header = new HashMap<String, String>();
     this.options = new HashMap<Integer, String>();
+    this.flags = new HashMap<String, Integer>();
     this.raw_data = null;
     this.encapsulated_packet = null;
     this.setPacket(packet);
@@ -60,6 +65,15 @@ public class DHCP extends Layer7 {
       }
       offset += size;
     }
+    this.setFlags();
+  }
+
+  private void setFlags() {
+    int flags_hex = Integer.parseInt(header.get("flags"), 16);
+    for(int i=0; i<flags_name.length; i++) {
+      int value = (flags_hex & flags_mask[i])>> flags_shift[i];
+      flags.put(flags_name[i], value);
+    }
   }
 
   public void setOptions() {
@@ -93,13 +107,21 @@ public class DHCP extends Layer7 {
   public String toString() {
     String dhcp;
     String res = "Dynamic Host Configuration Protocol (DHCP) \n";
+    //broadcast/unicast
+    Integer broadcast = flags.get("broadcast");
+    if(broadcast != null && broadcast==1){
+      res += "- Broadcast -\n";
+    } else {
+      res += "- Unicast -\n";
+    }
 
     //Req/Reply
     if((dhcp = options.get(53))!=null) {
-      res += Tools.dhcpOpcode(Integer.parseInt(dhcp,16))+"\n";
+      res += "Message type:         "+Tools.dhcpOpcode(Integer.parseInt(dhcp,16))+"\n";
     }
     //xID
-    res += "Transaction ID : Ox"+header.get("transaction id")+"\n";
+    res += "Transaction ID :      Ox"+header.get("transaction id")+"\n";
+
     //addresses
     res += "Client IP address :   "+Tools.ipAddress(header.get("client IP"))+"\n";
     res += "Your address :        "+Tools.ipAddress(header.get("your IP"))+"\n";
