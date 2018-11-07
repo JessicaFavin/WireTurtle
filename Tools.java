@@ -82,15 +82,26 @@ public class Tools {
     return res;
   }
 
-  public static String icmpProtocol(String hex_type, String code) {
+  public static String icmpProtocol(String hex_type, String hex_code) {
     int type = Integer.parseInt(hex_type, 16);
+    int code = Integer.parseInt(hex_code, 16);
     String res = String.valueOf(type);
     switch(type) {
       case 0:
         res += " Echo reply (ping)";
         break;
       case 3:
-        res += " Destination unreacheable";
+        if(code==0){
+          res += " Destination unreacheable";
+        } else if (code==1) {
+          res += " Host unreacheable";
+        } else if (code==2) {
+          res += " Protocole unreacheable";
+        } else if (code==3) {
+          res += " Port unreacheable";
+        } else if (code==4) {
+          res += " Fragmentation needed but forbidden";
+        }
         break;
       case 5:
         res += " Redirect message";
