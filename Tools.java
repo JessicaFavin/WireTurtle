@@ -146,17 +146,29 @@ public class Tools {
   public static String dhcpOpcode(int dhcpCode){
     String res = String.valueOf(dhcpCode);
     switch(dhcpCode){
-      case 5:
-        res += " (ACK)";
-        break;
-      case 3:
-        res += " (Request)";
+      case 1:
+        res += " (Discover)";
         break;
       case 2:
         res += " (Offer)";
         break;
-      case 1:
-        res += "(Discover)";
+      case 3:
+        res += " (Request)";
+        break;
+      case 4:
+        res += " (Decline)";
+        break;
+      case 5:
+        res += " (ACK)";
+        break;
+      case 6:
+        res += " (NAK)";
+        break;
+      case 7:
+        res += " (Release)";
+        break;
+      case 8:
+        res += " (Inform)";
         break;
       default:
         break;
