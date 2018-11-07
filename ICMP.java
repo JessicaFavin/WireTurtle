@@ -44,10 +44,10 @@ public class ICMP extends Layer4 {
   @Override
   public String toString() {
     String res = "ICMP Protocol\n";
-    res += "type \t"+Tools.icmpProtocol(header.get("type"), header.get("code"))+"\n";
-    res += "id \t0x"+header.get("id")+"\n";
-    res += "seq \t"+Integer.parseInt(header.get("seq"),16)+"\n";
-    res += "data \t"+Tools.hexToAscii(header.get("data"))+"\n";
+    res += "Type :      "+Tools.icmpProtocol(header.get("type"), header.get("code"))+"\n";
+    res += "ID :        0x"+header.get("id")+"\n";
+    res += "Sequence :  "+Integer.parseInt(header.get("seq"),16)+"\n";
+    res += "Data :      "+Tools.hexToAscii(header.get("data"))+"\n";
     return res;
   }
 
