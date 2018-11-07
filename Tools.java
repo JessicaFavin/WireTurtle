@@ -235,15 +235,12 @@ public class Tools {
         return res;
     }
 
-    /**
-     * code based on https://stackoverflow.com/questions/4785654/convert-a-string-of-hex-into-ascii-in-java#4785776
-    **/
     public static String hexToAscii(String hex) {
       StringBuilder output = new StringBuilder();
       for (int i = 0; i < hex.length(); i+=2) {
           String str = hex.substring(i, i+2);
           int ascii = Integer.parseInt(str, 16);
-          //readable ascii only
+          //visible ascii + tab, carriage return and newline
           if(ascii==9||ascii==10||ascii==13||(ascii>=32&&ascii<=126)){
             output.append((char) ascii);
           } else {

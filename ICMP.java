@@ -25,7 +25,6 @@ public class ICMP extends Layer4 {
     for(int i=0; i< fields_size.length; i++) {
       size = fields_size[i];
       if(size==0) {
-        //data length including padding
         size = (packet.length-header_total);
         fields_size[i] = size;
         buffer = new byte[size];
@@ -34,7 +33,6 @@ public class ICMP extends Layer4 {
       } else {
         buffer = new byte[size];
         buffer = Arrays.copyOfRange(packet, offset, offset+size);
-        //to do reverse seq and id to get the LE version
         header.put(fields_name[i], Tools.hexToString(buffer));
       }
       offset += size;

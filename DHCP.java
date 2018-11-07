@@ -40,7 +40,6 @@ public class DHCP extends Layer7 {
     packet: for(int i=0; i< fields_size.length; i++) {
       size = fields_size[i];
       if(size==-1) {
-        //data length including padding
         if(header_total == packet.length){
           size = 0;
           header.put(fields_name[i], "");
@@ -80,17 +79,14 @@ public class DHCP extends Layer7 {
     String opData;
     boolean stop = false;
     while(!stop || offset<op.length()) {
-      //read opcode
       size = 2;
       opCode = Integer.parseInt(op.substring(offset, offset+=size), 16);
 
-      //read op lengnth
       opLength = Integer.parseInt(op.substring(offset, offset+=size), 16);
       if(opLength==0) {
         stop = true;
         break;
       }
-      //read option data
       opData = op.substring(offset, offset+=(opLength*2));
       options.put(opCode, opData);
     }
@@ -100,7 +96,6 @@ public class DHCP extends Layer7 {
   public String toString() {
     String dhcp;
     String res = "Dynamic Host Configuration Protocol (DHCP) \n";
-    //broadcast/unicast
     Integer broadcast = flags.get("broadcast");
     if(broadcast != null && broadcast==1){
       res += "- Broadcast -\n";
@@ -108,14 +103,12 @@ public class DHCP extends Layer7 {
       res += "- Unicast -\n";
     }
 
-    //Req/Reply
     if((dhcp = options.get(53))!=null) {
       res += "Message type:         "+Tools.dhcpOpcode(Integer.parseInt(dhcp,16))+"\n";
     }
-    //xID
+
     res += "Transaction ID :      Ox"+header.get("transaction id")+"\n";
 
-    //addresses
     res += "Client IP address :   "+Tools.ipAddress(header.get("client IP"))+"\n";
     res += "Your address :        "+Tools.ipAddress(header.get("your IP"))+"\n";
     res += "Next server :         "+Tools.ipAddress(header.get("server IP"))+"\n";

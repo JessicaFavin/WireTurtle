@@ -9,7 +9,6 @@ public class WireTurtle {
 		System.out.println("conversation_number : 0 for all conversation");
 	}
 	public static void main(String[] args) {
-		//verify pcap + ethernet protocol
 		PCAP pcap;
 		switch(args.length) {
 			case 0:

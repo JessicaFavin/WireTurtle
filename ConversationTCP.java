@@ -19,7 +19,6 @@ public class ConversationTCP {
   public void addPaquet(Ethernet ef) {
     if(!this.packetList.contains(ef)){
       this.packetList.add(ef);
-      //this.dataList.add(ef.getTcpData());
     } else {
       int packetIndex = this.packetList.indexOf(ef);
       //removes old one
@@ -63,8 +62,6 @@ public class ConversationTCP {
     if(this.data.contains("227 Entering Passive Mode")) {
       //only recognizes passive FTP
       this.protocol = "FTP";
-      //retrieve data port with regex maybe
-      //(192,168,0,193,28,86)
       for(Ethernet ef: packetList){
         if(!ef.isDHCP() && !ef.isDNS() && !ef.isHTTP()) {
           ef.constructFTP();

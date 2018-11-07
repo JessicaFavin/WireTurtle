@@ -78,7 +78,6 @@ public class TCP extends Layer4 {
     packet: for(int i=0; i< fields_size.length; i++) {
       size = fields_size[i];
       if(size==-1) {
-        //data length including padding
         if(header_total == packet.length){
           size = 0;
           header.put(fields_name[i], "");
@@ -95,7 +94,6 @@ public class TCP extends Layer4 {
         buffer = new byte[size];
         buffer = Arrays.copyOfRange(packet, offset, offset+size);
         if(fields_name[i].equals("offset flags")){
-          //will set options size in the array
           this.setLengthAndFlags(Tools.hexToString(buffer));
         }
         header.put(fields_name[i], Tools.hexToString(buffer));

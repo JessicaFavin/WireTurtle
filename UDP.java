@@ -65,7 +65,6 @@ public class UDP extends Layer4 {
     for(int i=0; i< fields_size.length; i++) {
       size = fields_size[i];
       if(size==0) {
-        //data length including padding
         size = (packet.length-header_total);
         fields_size[i] = size;
         buffer = new byte[size];
@@ -90,7 +89,7 @@ public class UDP extends Layer4 {
       res += "\n";
       res += encapsulated_packet.toString();
     } else {
-      res += "Data \n"+Tools.hexToAscii(header.get("data"));//Tools.displayRawData(header.get("data"));
+      res += "Data \n"+Tools.hexToAscii(header.get("data"));
     }
     return res;
   }

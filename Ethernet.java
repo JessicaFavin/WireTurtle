@@ -17,17 +17,14 @@ public class Ethernet extends Layer2 {
     this.setPacket(packet);
     switch(header.get("type")) {
       case "0806":
-        //ARP packet -> setData
         this.encapsulated_packet = new ARP(raw_data);
         break;
       case "0800":
-        //IPv4 packet
         this.encapsulated_packet = new IP(raw_data);
         break;
       default:
         break;
     }
-    //ARP doesn't encapsulate other protocols
   }
 
   @Override
@@ -38,7 +35,6 @@ public class Ethernet extends Layer2 {
     for(int i=0; i< fields_size.length; i++) {
       size = fields_size[i];
       if(size==0) {
-        //data length including padding
         size = (packet.length-header_total);
         fields_size[i] = size;
         buffer = new byte[size];

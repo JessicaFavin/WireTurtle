@@ -44,7 +44,6 @@ public class PCAP {
 				bytes_to_read -= value;
 				hex_data = Tools.hexToString(Arrays.copyOfRange(byteArray,0,value));
 				global_header.put(global_header_tag[i],hex_data);
-        //&& ! hex_data.equals("d4c3b2a1")
         if(global_header_tag[i].equals("magic number") && ! (hex_data.equals("a1b2c3d4") || hex_data.equals("d4c3b2a1"))){
           System.out.println("This doesn't seem to be a PCAP file.");
           System.out.println("Bye now.");
@@ -85,7 +84,7 @@ public class PCAP {
   }
 
   private void recomposeConversations() {
-    int inHandshake = 0;// outHandshake = 0;
+    int inHandshake = 0;
     String id = "", idReversed = "";
 
     loop: for(Ethernet ef : snapshot) {
@@ -109,7 +108,6 @@ public class PCAP {
         } else if(inHandshake==2){
           if(ef.hasAck()) {
             inHandshake++;
-            //add couple in conv
             conversations.put(id, new ConversationTCP(id));
             inHandshake = 0;
             continue;
@@ -117,7 +115,7 @@ public class PCAP {
             inHandshake = 0;
           }
         }
-        //------------Not a handshake message--------------
+        //------------If not a handshake packet--------------
         if(conversations.containsKey(id)){
           conversations.get(id).addPaquet(ef);
         } else if(conversations.containsKey(idReversed)){
